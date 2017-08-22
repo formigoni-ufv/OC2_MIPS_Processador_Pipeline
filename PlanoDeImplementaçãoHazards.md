@@ -17,16 +17,16 @@ Deve detectar se uma instrução ira escrever em registrador que será lido no p
 Entradas
 --------
 
-ID/EX.registradorRs
-ID/EX.registradorRt
-EX/MEM.registradorRd
-MEM/WB.registradorRd
+* ID/EX.registradorRs
+* ID/EX.registradorRt
+* EX/MEM.registradorRd
+* MEM/WB.registradorRd
 
 Saidas
 ------
 
-ForwardB
-ForwardA
+* ForwardB
+* ForwardA
 
 Logica
 ------
@@ -46,17 +46,17 @@ Como funciona o stall? Basicamente ele força no próximo ciclo que todos regist
 Entradas
 --------
 
-ID/EX.LeMem
-ID/EX.registradorRt
-IF/ID.registradorRs
-IF/ID.registradorRt
+* ID/EX.LeMem
+* ID/EX.registradorRt
+* IF/ID.registradorRs
+* IF/ID.registradorRt
 
 Saidas
 ------
 
-PCWrite
-IF/ID.Write
-Mux.ID/EX.Write
+* PCWrite
+* IF/ID.Write
+* Mux.ID/EX.Write
 
 Logica
 ------
