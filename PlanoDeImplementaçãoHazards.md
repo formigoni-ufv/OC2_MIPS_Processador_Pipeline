@@ -40,7 +40,9 @@ Descrição
 ---------
 
 Deve detectar lw para ocasionar os stalls quando necessário. Para isso ele se atenta a flag LeMem do estágio EX.
-    - Se a flag LeMem anunciar algum load, então a unidade de detecção de hazard confere os registradores Rs e Rt da instrução do estágio ID, comparando-as com o registrador Rt da instrução de load. Se forem iguais é STALL.
+
+* Se a flag LeMem anunciar algum load, então a unidade de detecção de hazard confere os registradores Rs e Rt da instrução do estágio ID, comparando-as com o registrador Rt da instrução de load. Se forem iguais é STALL.
+
 Como funciona o stall? Basicamente ele força no próximo ciclo que todos registradores em ID/EX tenham valor 0 e que os registradore PC e IF/ID tenham o mesmo valor do último ciclo. Atrasando os ciclos
 
 Entradas
