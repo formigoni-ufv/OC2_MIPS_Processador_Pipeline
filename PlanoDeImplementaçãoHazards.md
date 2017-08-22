@@ -21,6 +21,8 @@ Entradas
 * ID/EX.registradorRt
 * EX/MEM.registradorRd
 * MEM/WB.registradorRd
+* EX/MEM.EscreveReg
+* MEM/WB.EscreveReg,
 
 Saidas
 ------
