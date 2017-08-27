@@ -5,3 +5,5 @@
 #O que foi feito
 #Dificuldades Encontradas
 #Testando (Com Imagens)
+
+Pipelines: Escrita em borda de subida, leitura em borda de descida.

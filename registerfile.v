@@ -2,7 +2,7 @@ module registerfile(
 	input wire clk,
 	input wire[4:0] reg1addr,
 	input wire[4:0] reg2addr,
-	input wire[4:0] regWaddr,
+	input wire[4:0] writeRegister,
 	input wire[31:0] data,
 	input wire regWrite,
 	output reg[31:0] reg1content,
@@ -20,7 +20,7 @@ module registerfile(
 		registers[10] = 4;	//$t2
 		registers[11] = 4;	//$t3
 		registers[12] = 77;	//$t4
-		
+
 		registers[17] = 10;	//$s1
 	end
 
@@ -36,8 +36,8 @@ module registerfile(
 
 	////////////DATA WRITE//////////////////
 	always@(posedge clk) begin
-		if(regWrite == 1) begin
-			registers[regWaddr] = data;
+		if(writeRegister == 1) begin
+			registers[writeRegister] = data;
 			update = 1;
 		end
 	end

@@ -1,299 +1,246 @@
 //Ruan Evangelista Formigoni - 2661
-//Adriano Martins – 2640
+//Vitor Guerra Veloso - 2658
 
-module processor (
-	input wire clock,
-	input wire realclock,
-	input wire reset, sw9, sw8, sw7, sw6, sw5, sw4, sw3, sw2,
-	output reg led0, led1, led2, led3, led4, led5, led6, led7, led8, led9,
-	output wire[6:0] DISPLAY0, DISPLAY1, DISPLAY2, DISPLAY3, DISPLAY4, DISPLAY5
-	);
-	
+`include "alu_control.v"
+`include "andgate.v"
+`include "arithmeticlogicunit.v"
+`include "datamemory.v"
+`include "decoder.v"
+`include "instructionmemory.v"
+`include "maincontrolunit.v"
+`include "multiplexor.v"
+`include "programcounter.v"
+`include "registerfile.v"
+`include "signext.v"
+`include "sll.v"
+`include "pipelinestages.v"
+// `include "tb_forwarding_unit.v"
+// `include "tb_hazard_detection_unit.v"
+// `include "forwarding_unit.v"
+// `include "hazard_detection_unit.v"
+
+module processor ();
+
 	reg[31:0] i;
 	//clk
 	reg clk;
-	//Main Control Unit VARS
-	wire branch;
-	//PC VARS
-	wire [31:0] pcIn;	//PCSrcMUX
-	wire[31:0] pcOut;
-	//ALU(PC + 4) VARS
-	wire[31:0] aluPCPlus4Out;
-	//INSMEM VARS
-	wire[31:0] insMemOut;
-	//REG FILE MUX
-	wire regDst;
-	wire[4:0] regDstOut;
-	//REG FILE VARS
-	wire regWrite;
-	wire[31:0] reg1content;
-	wire[31:0] reg2content;
-	wire[31:0] memtoRegOut;
-	//SIGN EXT
-	wire[31:0] extOut;
-	//MAIN ALU MUX
-	wire aluSrc;
-	wire[31:0] aluSrcOut;
-	//MAIN ALU CONTROL
-	wire[1:0] ALUOp;
-	wire[3:0] aluCtrlOut;
-	//MAIN ALU
-	wire zero;
-	wire[31:0] aluMainOut;
-	//SLL
-	wire[31:0] sllOut;
-	//BranchAlu
-	wire[31:0] branchAluOut;
-	//AND
-	wire andGateOut;
-	//DATA MEMORY
-	wire memRead, memWrite;
-	wire[31:0] dataMemOut;
-	//MEMtoREG MUX
-	wire MemtoReg;
+	//PC WIRES
+	wire [31:0] PCSrc; //Proximo endereco do PC
+	wire[31:0] PCOutput; //Saida do PC
+
+	//ALU(PC + 4) WIRES
+	wire[31:0] ALUPCPlus4Output; //Saida da ALU PC + 4
+	//INSMEM WIRES
+	wire[31:0] instruction; //Instrucao que sai da Instruction Memory
+	//RegisterFile WIRES
+	wire[31:0] readData1; //Dado lido de RS no register file
+	wire[31:0] readData2; //Dado lido de RT no register file
+	//Sign Extend WIRE
+	wire[31:0] signExtendOutput; //Saida do modulo de extensao do sinal
+
+	//Sinais do Controle
+	wire CSignal_RegDst;
+	wire CSignal_ALUSrc;
+	wire CSignal_MemtoReg;
+	wire CSignal_RegWrite;
+	wire CSignal_MemRead;
+	wire CSignal_MemWrite;
+	wire CSignal_Branch;
+	wire[1:0] CSignal_ALUOp;
+
+	//Sinais de controle da pipeline ID/EX
+	wire PIPE_IDEX_OUT_CSignal_EX_ALUSrc;
+	wire[1:0] PIPE_IDEX_OUT_CSignal_EX_ALUOp;
+	wire PIPE_IDEX_OUT_CSignal_EX_RegDst;
+	wire PIPE_IDEX_OUT_CSignal_MEM_Branch;
+	wire PIPE_IDEX_OUT_CSignal_MEM_MRead;
+	wire PIPE_IDEX_OUT_CSignal_MEM_MWrite;
+	wire PIPE_IDEX_OUT_CSignal_WB_RegWrite;
+	wire PIPE_IDEX_OUT_CSignal_WB_MemtoReg;
+
+	/*****************************************PIPELINED**********************************/
+	reg resetManual; //TODO substituir pelo reset chaveado
+	reg[31:0] pcInManual;  //TODO remover pelo PCIn do mux, esta variavel garante dont cares
+
+	//Fios de saida da pipeline IF/ID
+	wire[31:0] PIPE_IFID_ALUPCPlus4Output;
+	wire[31:0] PIPE_IFID_Instruction;
+
+	//Fios de saida da pipeline ID/EX
+	wire[31:0] PIPE_IDEX_OUT_ALUPCPlus4Output;
+	wire[31:0] PIPE_IDEX_OUT_ReadData1;
+	wire[31:0] PIPE_IDEX_OUT_ReadData2;
+	wire[31:0] PIPE_IDEX_OUT_SignExt;
+	wire[4:0] PIPE_IDEX_OUT_RT;
+	wire[4:0] PIPE_IDEX_OUT_RD;
+
+	//Fios de saida da pipeline MEM/WB
+	wire       PIPE_MEMWB_CSignal_RegWrite;
+	wire[4:0]  PIPE_MEMWB_RegDstOutput;
+	wire[31:0] PIPE_MEMWB_MemtoRegMUXOutput;
+
+	/******************************Instruction Fetch Stage********************************/
+	programcounter PC(.clock(clk), .in(pcInManual), .out(PCOutput), .reset(resetManual) );
+
+	instructionmemory InstructionMemory(.addr(PCOutput), .instruction(instruction) );
+
+	arithmeticlogicunit ALUPCPlus4(.A(PCOutput), .B(32'b100), .OP(4'b10), .OUT(ALUPCPlus4Output) );
+
+	PIPE_IF_ID IF_ID(.clk(clk), .PIPEIN_PCPlus4(ALUPCPlus4Output), .PIPEIN_InsMemory(instruction), .PIPEOUT_PCPlus4(PIPE_IFID_ALUPCPlus4Output), .PIPEOUT_InsMemory(PIPE_IFID_Instruction) );
+
+	/*************Instruction Decode Stage***************/
+	maincontrolunit ControlUnit(.op(PIPE_IFID_Instruction[31:26]), .regDst(CSignal_RegDst), .ALUSrc(CSignal_ALUSrc), .memtoReg(CSignal_MemtoReg), .regWrite(CSignal_RegWrite), .memRead(CSignal_MemRead), .memWrite(CSignal_MemWrite), .branch(CSignal_Branch), .ALUOp1(CSignal_ALUOp[1]), .ALUOp0(CSignal_ALUOp[0]) );
+
+	registerfile RegisterFile(.clk(clk), .reg1addr(PIPE_IFID_Instruction[25:21]), .reg2addr(PIPE_IFID_Instruction[20:16]), .writeRegister(PIPE_MEMWB_RegDstOutput), .data(PIPE_MEMWB_MemtoRegMUXOutput), .regWrite(PIPE_MEMWB_CSignal_RegWrite), .reg1content(readData1),	.reg2content(readData2) );
+
+	signext SignExt(.i0(PIPE_IFID_Instruction[15:0]), .out(signExtendOutput) );
 
 
-	/********FPGA I/O OUTPUT*******/
-	reg [3:0] displaysIn[5:0];
-	
-	 decoder display0(
-	 	.in(displaysIn[0]),
-	 	.out(DISPLAY0)
-	 );
-	
-	 decoder display1(
-	 	.in(displaysIn[1]),
-	 	.out(DISPLAY1)
-	 );
-	
-	 decoder display2(
-	 	.in(displaysIn[2]),
-	 	.out(DISPLAY2)
-	 );
-	
-	 decoder display3(
-	 	.in(displaysIn[3]),
-	 	.out(DISPLAY3)
-	 );
-	
-	
-	 decoder display4(
-	 	.in(displaysIn[4]),
-	 	.out(DISPLAY4)
-	 );
-	
-	
-	 decoder display5(
-	 	.in(displaysIn[5]),
-	 	.out(DISPLAY5)
-	 );
-	 
-	 //CLOCK
-	always@(posedge realclock)begin
-		
-		if(sw9 == 0)begin
-			clk = clock;
-		end
-		
-		else if(sw9 == 1)begin
-			i = i+1;
-			if(i == 50000000)begin
-				clk = 1;
-			end
-			else if(i == 100000000)begin
-				clk = 0;
-				i=0;
-			end
-		end
-	
-	end
-	
-	//LEDS
-	always@(sw9, sw8, sw8, sw7, sw6, sw5, sw4, sw3, sw2, reset, clock)begin
-		if(sw9)   led9 = 1; else led9 = 0;
-		if(sw8)   led8 = 1; else led8 = 0;
-		if(sw7)   led7 = 1; else led7 = 0;
-		if(sw6)   led6 = 1; else led6 = 0;
-		if(sw5)   led5 = 1; else led5 = 0;
-		if(sw4)   led4 = 1; else led4 = 0;
-		if(sw3)   led3 = 1; else led3 = 0;
-		if(sw2)   led2 = 1; else led2 = 0;
-		if(reset) led1 = 1; else led1 = 0;
-		if(clock) led0 = 1; else led0 = 0;
-	end
-	
-	//SWITCHES
-	always@(sw8, sw7, sw6, sw5, sw4, sw3, sw2, pcOut, aluPCPlus4Out, pcIn, aluMainOut)begin
-		if(sw8 == 1)begin
-			displaysIn[0] <= pcOut[3:0];
-			displaysIn[1] <= pcOut[7:4];
-			displaysIn[2] <= pcOut[11:8];
-			displaysIn[3] <= pcOut[15:12];
-			displaysIn[4] <= pcOut[19:16];
-			displaysIn[5] <= pcOut[23:20];
-		end
-		else if(sw7 == 1) begin
-			displaysIn[0] <= aluPCPlus4Out[3:0];
-			displaysIn[1] <= aluPCPlus4Out[7:4];
-			displaysIn[2] <= aluPCPlus4Out[11:8];
-			displaysIn[3] <= aluPCPlus4Out[15:12];
-			displaysIn[4] <= aluPCPlus4Out[19:16];
-			displaysIn[5] <= aluPCPlus4Out[23:20];
-		end
-		else if(sw6 == 1) begin
-			displaysIn[0] <= pcIn[3:0];
-			displaysIn[1] <= pcIn[7:4];
-			displaysIn[2] <= pcIn[11:8];
-			displaysIn[3] <= pcIn[15:12];
-			displaysIn[4] <= pcIn[19:16];
-			displaysIn[5] <= pcIn[23:20];
-		end
-		else if(sw5 == 1)begin
-			displaysIn[0] <= aluSrcOut[3:0];
-			displaysIn[1] <= aluSrcOut[7:4];
-			displaysIn[2] <= aluSrcOut[11:8];
-			displaysIn[3] <= aluSrcOut[15:12];
-			displaysIn[4] <= aluSrcOut[19:16];
-			displaysIn[5] <= aluSrcOut[23:20];
-		end
-		else if(sw4 == 1)begin
-			displaysIn[0] <= reg1content[3:0];
-			displaysIn[1] <= reg1content[7:4];
-			displaysIn[2] <= reg1content[11:8];
-			displaysIn[3] <= reg1content[15:12];
-			displaysIn[4] <= reg1content[19:16];
-			displaysIn[5] <= reg1content[23:20];
-		end		
-		else if(sw3 == 1)begin
-			displaysIn[0] <= aluMainOut[3:0];
-			displaysIn[1] <= aluMainOut[7:4];
-			displaysIn[2] <= aluMainOut[11:8];
-			displaysIn[3] <= aluMainOut[15:12];
-			displaysIn[4] <= aluMainOut[19:16];
-			displaysIn[5] <= aluMainOut[23:20];
-		end
+	PIPE_ID_EX ID_EX(
+	.clk(clk),
+	.PIPEIN_PCPlus4(PIPE_IFID_ALUPCPlus4Output),
+	.PIPEIN_ReadData1(readData1),
+	.PIPEIN_ReadData2(readData2),
+	.PIPEIN_SignExt(signExtendOutput),
+	.PIPEIN_RT(PIPE_IFID_Instruction[20:16]),
+	.PIPEIN_RD(PIPE_IFID_Instruction[15:11]),
 
-	end
-	/****************************/
+	.PIPEIN_EX_ALUSrc(CSignal_ALUSrc),
+	.PIPEIN_EX_ALUOp(CSignal_ALUOp),
+	.PIPEIN_EX_RegDst(CSignal_RegDst),
+	.PIPEIN_MEM_Branch(CSignal_Branch),
+	.PIPEIN_MEM_MRead(CSignal_MemRead),
+	.PIPEIN_MEM_MWrite(CSignal_MemWrite),
+	.PIPEIN_WB_RegWrite(CSignal_RegWrite),
+	.PIPEIN_WB_MemtoReg(CSignal_MemtoReg),
+
+	.PIPEOUT_PCPlus4(PIPE_IDEX_OUT_ALUPCPlus4Output),
+	.PIPEOUT_ReadData1(PIPE_IDEX_OUT_ReadData1),
+	.PIPEOUT_ReadData2(PIPE_IDEX_OUT_ReadData2),
+	.PIPEOUT_SignExt(PIPE_IDEX_OUT_SignExt),
+	.PIPEOUT_RT(PIPE_IDEX_OUT_RT),
+	.PIPEOUT_RD(PIPE_IDEX_OUT_RD),
+
+	.PIPEOUT_EX_ALUSrc(PIPE_IDEX_OUT_CSignal_EX_ALUSrc),
+	.PIPEOUT_EX_ALUOp(PIPE_IDEX_OUT_CSignal_EX_ALUOp),
+	.PIPEOUT_EX_RegDst(PIPE_IDEX_OUT_CSignal_EX_RegDst),
+	.PIPEOUT_MEM_Branch(PIPE_IDEX_OUT_CSignal_MEM_Branch),
+	.PIPEOUT_MEM_MRead(PIPE_IDEX_OUT_CSignal_MEM_MRead),
+	.PIPEOUT_MEM_MWrite(PIPE_IDEX_OUT_CSignal_MEM_MWrite),
+	.PIPEOUT_WB_RegWrite(PIPE_IDEX_OUT_CSignal_WB_RegWrite),
+	.PIPEOUT_WB_MemtoReg(PIPE_IDEX_OUT_CSignal_WB_MemtoReg)
+
+	);
 
 
+
+	/******************************************************************************************Single Cycle**************************************************************************************************************************/
 	//Modules Instantiation
-	programcounter pc(
-		.clock(clk),
-		.in(pcIn),
-		.out(pcOut),
-		.reset(reset)
-		
-	);
+	// programcounter pc(.clock(clk), .in(pcIn), .out(pcOut), .reset(reset) );
+	//
+	// arithmeticlogicunit aluPCPlus4(.A(pcOut), .B(32'b100), .OP(4'b10), .OUT(aluPCPlus4Out) );
+	//
+	// instructionmemory insmem(.addr(pcOut), .instruction(insMemOut) );
+	//
+	// maincontrolunit controlUnit(.op(insMemOut[31:26]), .regDst(regDst), .ALUSrc(aluSrc), .memtoReg(MemtoReg), .regWrite(regWrite), .memRead(memRead), .memWrite(memWrite), .branch(branch), .ALUOp1(ALUOp[1]), .ALUOp0(ALUOp[0]) );
+	//
+	// multiplexorRegDst regfilemux(.i0(insMemOut[20:16]), .i1(insMemOut[15:11]), .control(regDst), .out(regDstOut) );
+	//
+	// signext ext(.i0(insMemOut[15:0]), .out(extOut) );
+	//
+	// registerfile regfile(.clk(clk), .reg1addr(insMemOut[25:21]), .reg2addr(insMemOut[20:16]), .regWaddr(regDstOut), .data(memtoRegOut), .regWrite(regWrite), .reg1content(reg1content),	.reg2content(reg2content) );
+	//
+	// multiplexorALUSrc alumux(.i0(reg2content), .i1(extOut), .control(aluSrc), .out(aluSrcOut) );
+	//
+	// alu_control aluControl(.ALUOp(ALUOp), .funcCode(insMemOut[5:0]), .aluCtrlOut(aluCtrlOut) );
+	//
+	// arithmeticlogicunit mainAlu(.A(reg1content), .B(aluSrcOut), .OP(aluCtrlOut), .OUT(aluMainOut), .zero(zero) );
+	//
+	// shiftlogicalleft sll(.i0(extOut), .out(sllOut));
+	//
+	// arithmeticlogicunit branchAlu(.A(aluPCPlus4Out), .B(sllOut), .OP(4'b10), .OUT(branchAluOut) );
+	//
+	// multiplexorPCSrc branchmux(.i0(aluPCPlus4Out), .i1(branchAluOut), .control(andGateOut), .out(pcIn) );
+	//
+	// andgate gate(.i0(branch), .i1(zero), .out(andGateOut) );
+	//
+	// datamemory datamem(.clk(clk), .addr(aluMainOut), .writeData(reg2content), .memRead(memRead), .memWrite(memWrite), .readData(dataMemOut) );
+	//
+	// multiplexorMemtoReg dataMemMux(.i0(aluMainOut), .i1(dataMemOut), .control(MemtoReg), .out(memtoRegOut) );
+	/****************************************************************************************************************************************************************************************************************/
 
-	arithmeticlogicunit aluPCPlus4(
-		.A(pcOut),
-		.B(32'b100),
-		.OP(4'b10),
-		.OUT(aluPCPlus4Out)
-	);
 
-	instructionmemory insmem(
-		.addr(pcOut),
-		.instruction(insMemOut)
-	);
 
-	maincontrolunit controlUnit(
-		.op(insMemOut[31:26]),
-		.regDst(regDst),
-		.ALUSrc(aluSrc),
-		.memtoReg(MemtoReg),
-		.regWrite(regWrite),
-		.memRead(memRead),
-		.memWrite(memWrite),
-		.branch(branch),
-		.ALUOp1(ALUOp[1]),
-		.ALUOp0(ALUOp[0])
-	);
 
-	multiplexorRegDst regfilemux(
-		.i0(insMemOut[20:16]),
-		.i1(insMemOut[15:11]),
-		.control(regDst),
-		.out(regDstOut)
-	);
+	/*************************************************************************************************PIPELINED*****************************************************************************************************/
 
-	signext ext(
-		.i0(insMemOut[15:0]),
-		.out(extOut)
-	);
 
-	registerfile regfile(
-		.clk(clk),
-		.reg1addr(insMemOut[25:21]),
-		.reg2addr(insMemOut[20:16]),
-		.regWaddr(regDstOut),
-		.data(memtoRegOut),
-		.regWrite(regWrite),
-		.reg1content(reg1content),
-		.reg2content(reg2content)
-	);
+	//Testing
 
-	multiplexorALUSrc alumux(
-		.i0(reg2content),
-		.i1(extOut),
-		.control(aluSrc),
-		.out(aluSrcOut)
-	);
+	always@(clk) begin
+	#10
+		$display("\n");
+		$display("Clock               :          Clock       | %b", clk);
+		$display("Stage IF:           :           PC         | %b", PCOutput);
+		$display("Stage IF:           :         PC + 4       | %b", ALUPCPlus4Output);
+		$display("Stage IF:           :       Instruction    | %b\n", instruction);
 
-	alu_control aluControl(
-		.ALUOp(ALUOp),
-		.funcCode(insMemOut[5:0]),
-		.aluCtrlOut(aluCtrlOut)
-	);
+		$display("Stage ID: IF|ID OUT :         PC + 4       | %b", PIPE_IFID_ALUPCPlus4Output);
+		$display("Stage ID: IF|ID OUT :       Instruction    | %b", PIPE_IFID_Instruction);
+		$display("Stage ID:           :       Read Data 1    | %b", readData1);
+		$display("Stage ID:           :       Read Data 2    | %b", readData2);
+		$display("Stage ID:           :       Sign Extend    | %b", signExtendOutput);
+		$display("Stage ID:           :            RT        | %b", PIPE_IFID_Instruction[20:16]);
+		$display("Stage ID:           :            RD        | %b", PIPE_IFID_Instruction[15:11]);
+		$display("Stage ID:           :    C_Signal RegDst   | %b", CSignal_RegDst);
+		$display("Stage ID:           :    C_Signal ALUSrc   | %b", CSignal_ALUSrc);
+		$display("Stage ID:           :    C_Signal MemtoReg | %b", CSignal_MemtoReg);
+		$display("Stage ID:           :    C_Signal RegWrite | %b", CSignal_RegWrite);
+		$display("Stage ID:           :    C_Signal MemRead  | %b", CSignal_MemRead);
+		$display("Stage ID:           :    C_Signal MemWrite | %b", CSignal_MemWrite);
+		$display("Stage ID:           :    C_Signal Branch   | %b", CSignal_Branch);
+		$display("Stage ID:           :    C_Signal ALUOp    | %b", CSignal_ALUOp);
 
-	arithmeticlogicunit mainAlu(
-		.A(reg1content),
-		.B(aluSrcOut),
-		.OP(aluCtrlOut),
-		.OUT(aluMainOut),
-		.zero(zero)
-	);
+		$display("Stage EX:           :        PCPlus4       | %b", PIPE_IDEX_OUT_ALUPCPlus4Output);
+		$display("Stage EX:           :       ReadData1      | %b", PIPE_IDEX_OUT_ReadData1);
+		$display("Stage EX:           :       ReadData2      | %b", PIPE_IDEX_OUT_ReadData2);
+		$display("Stage EX:           :       SignExtend     | %b", PIPE_IDEX_OUT_SignExt);
+		$display("Stage EX:           :           RT         | %b", PIPE_IDEX_OUT_RT);
+		$display("Stage EX:           :           RD         | %b", PIPE_IDEX_OUT_RD);
+		$display("Stage EX:           :   C_Signal RegDst    | %b", PIPE_IDEX_OUT_CSignal_EX_RegDst);
+		$display("Stage EX:           :   C_Signal ALUSrc    | %b", PIPE_IDEX_OUT_CSignal_EX_ALUSrc);
+		$display("Stage EX:           :   C_Signal MemtoReg  | %b", PIPE_IDEX_OUT_CSignal_WB_MemtoReg);
+		$display("Stage EX:           :   C_Signal RegWrite  | %b", PIPE_IDEX_OUT_CSignal_WB_RegWrite);
+		$display("Stage EX:           :   C_Signal MemRead   | %b", PIPE_IDEX_OUT_CSignal_MEM_MRead);
+		$display("Stage EX:           :   C_Signal MemWrite  | %b", PIPE_IDEX_OUT_CSignal_MEM_MWrite);
+		$display("Stage EX:           :   C_Signal Branch    | %b", PIPE_IDEX_OUT_CSignal_MEM_Branch);
+		$display("Stage EX:           :   C_Signal ALUOp     | %b", PIPE_IDEX_OUT_CSignal_EX_ALUOp);
 
-	shiftlogicalleft sll(
-		.i0(extOut),
-		.out(sllOut)
-	);
 
-	arithmeticlogicunit branchAlu(
-		.A(aluPCPlus4Out),
-		.B(sllOut),
-		.OP(4'b10),
-		.OUT(branchAluOut)
-	);
+		// $display("Stage 3: ID|EX OUT  :           RS         |");
+		// $display("Stage 3: ID|EX OUT  :           RT         |");
+		// $display("Stage 3: MEM|WB IN  :          ALU         |");
+		// $display("Stage 3: MEM|WB IN  :           RT         |\n");
+		// $display("Stage 4: MEM|WB OUT :          ALU         |");
+		// $display("Stage 4: MEM|WB OUT :           RT         |");
+		// $display("Stage 4: EX|MEM IN  :        MEM DATA      |");
+		// $display("Stage 4: EX|MEM IN  :          ALU         |\n");
+		// $display("Stage 5: WB MUX OUT :          WB          |");
+	end
 
-	multiplexorPCSrc branchmux(
-		.i0(aluPCPlus4Out),
-		.i1(branchAluOut),
-		.control(andGateOut),
-		.out(pcIn)
-	);
 
-	andgate gate(
-		.i0(branch),
-		.i1(zero),
-		.out(andGateOut)
-	);
+	initial begin
+	//Inicializando PC com 0
+	#20 resetManual = 1;
+	#20 clk = 1;
+	#20 resetManual = 0;
 
-	datamemory datamem(
-		.clk(clk),
-		.addr(aluMainOut),
-		.writeData(reg2content),
-		.memRead(memRead),
-		.memWrite(memWrite),
-		.readData(dataMemOut)
-	);
-
-	multiplexorMemtoReg dataMemMux(
-		.i0(aluMainOut),
-		.i1(dataMemOut),
-		.control(MemtoReg),
-		.out(memtoRegOut)
-	);
+	//Começando a Endereçar as instruções
+	#20 clk = 0;
+	#20 clk = 1;
+	#20 clk = 0;
+	#20 clk = 1;
+	#20 clk = 0;
+	end
 
 endmodule
