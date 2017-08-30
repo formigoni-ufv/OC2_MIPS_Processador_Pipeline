@@ -8,9 +8,11 @@ module datamemory(
 );
 
 	reg[31:0] memory[0:63];
+	reg[31:0] dontcare;
 
 	always @ (addr, writeData, memRead)begin
 		if(memRead) readData <= memory[addr];
+		else readData <= dontcare;
 	end
 
 	always @ (clk) begin
