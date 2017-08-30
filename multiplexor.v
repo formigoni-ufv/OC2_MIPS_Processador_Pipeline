@@ -4,10 +4,13 @@ module multiplexorRegDst(
 	output reg[4:0] out
 	);
 
+	reg[4:0] dontcare;
+
 	always @ (i0, i1, control) begin
 		case(control)
 			0: out <= i0;
 			1: out <= i1;
+			default: out <= dontcare;
 		endcase
 	end
 endmodule
@@ -18,10 +21,13 @@ module multiplexorALUSrc(
 	output reg[31:0] out
 	);
 
+	reg[31:0] dontcare;
+
 	always @ (i0, i1, control) begin
 		case(control)
 			0: out <= i0;
 			1: out <= i1;
+			default: out <= dontcare;
 		endcase
 	end
 endmodule
@@ -33,10 +39,13 @@ module multiplexorMemtoReg(
 	output reg[31:0] out
 	);
 
+	reg[31:0] dontcare;
+
 	always @ (i0, i1, control) begin
 		case(control)
 			0: out <= i0;
 			1: out <= i1;
+			default: out <= dontcare;
 		endcase
 	end
 endmodule
@@ -47,10 +56,13 @@ module multiplexorPCSrc(
 	output reg[31:0] out
 	);
 
+	reg[31:0] dontcare;
+
 	always @ (i0, i1, control) begin
 		case(control)
 			0: out <= i0;
 			1: out <= i1;
+			default out <= dontcare;
 		endcase
 	end
 endmodule

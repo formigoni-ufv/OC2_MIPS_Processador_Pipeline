@@ -13,7 +13,7 @@ module datamemory(
 		if(memRead) readData <= memory[addr];
 	end
 
-	always @ (posedge clk) begin
+	always @ (clk) begin
 		if(memWrite) memory[addr] <= writeData;
 	end
 

@@ -5,18 +5,12 @@ module programcounter(
 	output reg[31:0] out
 );
 
-	reg[31:0] programCounter;
-
-	always@(posedge clock)begin
+	always@(clock)begin
 		if(reset == 0)begin
-			programCounter <= in;
+			out <= in;
 		end else begin
-			programCounter <= 32'b0;
+			out <= 32'b0;
 		end
-	end
-
-	always@(negedge clock)begin
-		out <= programCounter;
 	end
 
 endmodule

@@ -3,6 +3,8 @@ module signext(
 	output reg[31:0] out
 	);
 
+	reg[31:0] dontcare;
+
 	always @ (i0) begin
 		case(i0[15])
 			0: begin
@@ -13,6 +15,9 @@ module signext(
 					out[31:16] = 16'b1111111111111111;
 					out[15:0] = i0;
 				end
+			default: begin
+				out = dontcare;
+			end
 		endcase
 	end
 endmodule

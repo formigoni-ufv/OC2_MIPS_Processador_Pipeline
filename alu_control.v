@@ -4,6 +4,8 @@ module alu_control(
 	output reg [3:0] aluCtrlOut
 	);
 
+	reg[3:0] dontcare;
+
 	always @ (ALUOp, funcCode) begin
 		case(ALUOp)
 			0: aluCtrlOut = 4'b0010;
@@ -15,6 +17,8 @@ module alu_control(
 						42: aluCtrlOut = 7; //SLT
 						34: aluCtrlOut = 6; // SUB
 				endcase
+			default:
+				aluCtrlOut = dontcare;
 		endcase
   end
 endmodule

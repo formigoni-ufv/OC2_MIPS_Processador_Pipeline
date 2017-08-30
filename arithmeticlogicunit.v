@@ -5,6 +5,8 @@ module arithmeticlogicunit(
 	output wire zero						//Checks if the operation result is 0
 	);
 
+	reg[31:0] dontcare;
+
 	assign zero = (OUT == 0);		//If the result of the op is 0, the flag is set to 1
 
 	always @ (A, B, OP) begin
@@ -14,7 +16,7 @@ module arithmeticlogicunit(
 			2: OUT = A + B;
 			6: OUT = A - B;
 			7: OUT = A < B;
-			default: ;
+			default: OUT = dontcare;
 		endcase
 	end
 endmodule
