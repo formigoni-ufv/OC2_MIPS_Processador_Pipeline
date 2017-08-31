@@ -1,5 +1,8 @@
 
 ******************************************************************
+ForwardingUnit      :        ForwardA      | 00
+ForwardingUnit      :        ForwardB      | 00
+
 Clock               :          Clock       | 1
 Stage IF:           :           PC         | 00000000000000000000000000000000
 Stage IF:           :         PC + 4       | 00000000000000000000000000000100
@@ -10,6 +13,7 @@ Stage ID: IF|ID OUT :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 2    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Sign Extend    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage ID:           :            RS        | xxxxx
 Stage ID:           :            RT        | xxxxx
 Stage ID:           :            RD        | xxxxx
 Stage ID:           :    C_Signal RegDst   | x
@@ -25,11 +29,14 @@ Stage EX:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData2      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       SignExtend     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :           RS         | xxxxx
 Stage EX:           :           RT         | xxxxx
 Stage EX:           :           RD         | xxxxx
 Stage EX:           :           SLL        | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       Branch ALU     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       MUX ALU Src    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i0   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i1   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       Main ALU       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :          Zero        | x
 Stage EX:           :  ALU Control Output  | xxxx
@@ -65,16 +72,20 @@ Stage WB:           :   Mem to Reg Output   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 ******************************************************************
+ForwardingUnit      :        ForwardA      | 00
+ForwardingUnit      :        ForwardB      | 00
+
 Clock               :          Clock       | 0
 Stage IF:           :           PC         | 00000000000000000000000000000100
 Stage IF:           :         PC + 4       | 00000000000000000000000000001000
-Stage IF:           :       Instruction    | 00000001010010111000100000100010
+Stage IF:           :       Instruction    | 00000010000010101000100000100010
 
 Stage ID: IF|ID OUT :         PC + 4       | 00000000000000000000000000000100
 Stage ID: IF|ID OUT :       Instruction    | 00000001000010011000000000100000
-Stage ID:           :       Read Data 1    | 00000000000000000000000000000010
+Stage ID:           :       Read Data 1    | 00000000000000000000000000001000
 Stage ID:           :       Read Data 2    | 00000000000000000000000000000100
 Stage ID:           :       Sign Extend    | 11111111111111111000000000100000
+Stage ID:           :            RS        | 01000
 Stage ID:           :            RT        | 01001
 Stage ID:           :            RD        | 10000
 Stage ID:           :    C_Signal RegDst   | 1
@@ -90,11 +101,14 @@ Stage EX:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData2      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       SignExtend     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :           RS         | xxxxx
 Stage EX:           :           RT         | xxxxx
 Stage EX:           :           RD         | xxxxx
 Stage EX:           :           SLL        | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       Branch ALU     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       MUX ALU Src    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i0   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i1   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       Main ALU       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :          Zero        | x
 Stage EX:           :  ALU Control Output  | xxxx
@@ -130,17 +144,21 @@ Stage WB:           :   Mem to Reg Output   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 ******************************************************************
+ForwardingUnit      :        ForwardA      | 00
+ForwardingUnit      :        ForwardB      | 00
+
 Clock               :          Clock       | 1
-Stage IF:           :           PC         | zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-Stage IF:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage IF:           :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage IF:           :           PC         | 00000000000000000000000000001000
+Stage IF:           :         PC + 4       | 00000000000000000000000000001100
+Stage IF:           :       Instruction    | 00000010000100011001000000100000
 
 Stage ID: IF|ID OUT :         PC + 4       | 00000000000000000000000000001000
-Stage ID: IF|ID OUT :       Instruction    | 00000001010010111000100000100010
-Stage ID:           :       Read Data 1    | 00000000000000000000000000001010
-Stage ID:           :       Read Data 2    | 00000000000000000000000000000101
+Stage ID: IF|ID OUT :       Instruction    | 00000010000010101000100000100010
+Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage ID:           :       Read Data 2    | 00000000000000000000000000001010
 Stage ID:           :       Sign Extend    | 11111111111111111000100000100010
-Stage ID:           :            RT        | 01011
+Stage ID:           :            RS        | 10000
+Stage ID:           :            RT        | 01010
 Stage ID:           :            RD        | 10001
 Stage ID:           :    C_Signal RegDst   | 1
 Stage ID:           :    C_Signal ALUSrc   | 0
@@ -152,15 +170,18 @@ Stage ID:           :    C_Signal Branch   | 0
 Stage ID:           :    C_Signal ALUOp    | 10
 
 Stage EX:           :         PC + 4       | 00000000000000000000000000000100
-Stage EX:           :       ReadData1      | 00000000000000000000000000000010
+Stage EX:           :       ReadData1      | 00000000000000000000000000001000
 Stage EX:           :       ReadData2      | 00000000000000000000000000000100
 Stage EX:           :       SignExtend     | 11111111111111111000000000100000
+Stage EX:           :           RS         | 01000
 Stage EX:           :           RT         | 01001
 Stage EX:           :           RD         | 10000
 Stage EX:           :           SLL        | 11111111111111100000000010000000
 Stage EX:           :       Branch ALU     | 11111111111111100000000010000100
 Stage EX:           :       MUX ALU Src    | 00000000000000000000000000000100
-Stage EX:           :       Main ALU       | 00000000000000000000000000000110
+Stage EX:           :     MUX Forward i0   | 00000000000000000000000000001000
+Stage EX:           :     MUX Forward i1   | 00000000000000000000000000000100
+Stage EX:           :       Main ALU       | 00000000000000000000000000001100
 Stage EX:           :          Zero        | 0
 Stage EX:           :  ALU Control Output  | 0010
 Stage EX:           :       MUX RegDst     | 10000
@@ -195,37 +216,44 @@ Stage WB:           :   Mem to Reg Output   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 ******************************************************************
+ForwardingUnit      :        ForwardA      | 10
+ForwardingUnit      :        ForwardB      | 00
+
 Clock               :          Clock       | 0
-Stage IF:           :           PC         | zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+Stage IF:           :           PC         | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
-Stage ID: IF|ID OUT :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID: IF|ID OUT :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage ID: IF|ID OUT :         PC + 4       | 00000000000000000000000000001100
+Stage ID: IF|ID OUT :       Instruction    | 00000010000100011001000000100000
 Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :       Read Data 2    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :       Sign Extend    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :            RT        | xxxxx
-Stage ID:           :            RD        | xxxxx
-Stage ID:           :    C_Signal RegDst   | x
-Stage ID:           :    C_Signal ALUSrc   | x
-Stage ID:           :    C_Signal MemtoReg | x
-Stage ID:           :    C_Signal RegWrite | x
-Stage ID:           :    C_Signal MemRead  | x
-Stage ID:           :    C_Signal MemWrite | x
-Stage ID:           :    C_Signal Branch   | x
-Stage ID:           :    C_Signal ALUOp    | xx
+Stage ID:           :       Read Data 2    | 00000000000000000000000000001010
+Stage ID:           :       Sign Extend    | 11111111111111111001000000100000
+Stage ID:           :            RS        | 10000
+Stage ID:           :            RT        | 10001
+Stage ID:           :            RD        | 10010
+Stage ID:           :    C_Signal RegDst   | 1
+Stage ID:           :    C_Signal ALUSrc   | 0
+Stage ID:           :    C_Signal MemtoReg | 0
+Stage ID:           :    C_Signal RegWrite | 1
+Stage ID:           :    C_Signal MemRead  | 0
+Stage ID:           :    C_Signal MemWrite | 0
+Stage ID:           :    C_Signal Branch   | 0
+Stage ID:           :    C_Signal ALUOp    | 10
 
 Stage EX:           :         PC + 4       | 00000000000000000000000000001000
-Stage EX:           :       ReadData1      | 00000000000000000000000000001010
-Stage EX:           :       ReadData2      | 00000000000000000000000000000101
+Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :       ReadData2      | 00000000000000000000000000001010
 Stage EX:           :       SignExtend     | 11111111111111111000100000100010
-Stage EX:           :           RT         | 01011
+Stage EX:           :           RS         | 10000
+Stage EX:           :           RT         | 01010
 Stage EX:           :           RD         | 10001
 Stage EX:           :           SLL        | 11111111111111100010000010001000
 Stage EX:           :       Branch ALU     | 11111111111111100010000010010000
-Stage EX:           :       MUX ALU Src    | 00000000000000000000000000000101
-Stage EX:           :       Main ALU       | 00000000000000000000000000000101
+Stage EX:           :       MUX ALU Src    | 00000000000000000000000000001010
+Stage EX:           :     MUX Forward i0   | 00000000000000000000000000001100
+Stage EX:           :     MUX Forward i1   | 00000000000000000000000000001010
+Stage EX:           :       Main ALU       | 00000000000000000000000000000010
 Stage EX:           :          Zero        | 0
 Stage EX:           :  ALU Control Output  | 0110
 Stage EX:           :       MUX RegDst     | 10001
@@ -245,7 +273,7 @@ Stage MEM:           :   C_Signal MemWrite  | 0
 Stage MEM:           :   C_Signal Branch    | 0
 Stage MEM:           :   BranchALUOutput    | 11111111111111100000000010000100
 Stage MEM:           :   Zero               | 0
-Stage MEM:           :   MainALUOutput      | 00000000000000000000000000000110
+Stage MEM:           :   MainALUOutput      | 00000000000000000000000000001100
 Stage MEM:           :   ReadData2          | 00000000000000000000000000000100
 Stage MEM:           :   RegDstOutput       | 10000
 Stage MEM:           :   Data Memory Output | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -260,8 +288,11 @@ Stage WB:           :   Mem to Reg Output   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 ******************************************************************
+ForwardingUnit      :        ForwardA      | 01
+ForwardingUnit      :        ForwardB      | 10
+
 Clock               :          Clock       | 1
-Stage IF:           :           PC         | zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+Stage IF:           :           PC         | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -270,266 +301,7 @@ Stage ID: IF|ID OUT :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 2    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Sign Extend    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :            RT        | xxxxx
-Stage ID:           :            RD        | xxxxx
-Stage ID:           :    C_Signal RegDst   | x
-Stage ID:           :    C_Signal ALUSrc   | x
-Stage ID:           :    C_Signal MemtoReg | x
-Stage ID:           :    C_Signal RegWrite | x
-Stage ID:           :    C_Signal MemRead  | x
-Stage ID:           :    C_Signal MemWrite | x
-Stage ID:           :    C_Signal Branch   | x
-Stage ID:           :    C_Signal ALUOp    | xx
-
-Stage EX:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       ReadData2      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       SignExtend     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :           RT         | xxxxx
-Stage EX:           :           RD         | xxxxx
-Stage EX:           :           SLL        | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx00
-Stage EX:           :       Branch ALU     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       MUX ALU Src    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       Main ALU       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :          Zero        | x
-Stage EX:           :  ALU Control Output  | xxxx
-Stage EX:           :       MUX RegDst     | xxxxx
-Stage EX:           :   C_Signal RegDst    | x
-Stage EX:           :   C_Signal ALUSrc    | x
-Stage EX:           :   C_Signal MemtoReg  | x
-Stage EX:           :   C_Signal RegWrite  | x
-Stage EX:           :   C_Signal MemRead   | x
-Stage EX:           :   C_Signal MemWrite  | x
-Stage EX:           :   C_Signal Branch    | x
-Stage EX:           :   C_Signal ALUOp     | xx
-
-Stage MEM:           :   C_Signal MemtoReg  | 0
-Stage MEM:           :   C_Signal RegWrite  | 1
-Stage MEM:           :   C_Signal MemRead   | 0
-Stage MEM:           :   C_Signal MemWrite  | 0
-Stage MEM:           :   C_Signal Branch    | 0
-Stage MEM:           :   BranchALUOutput    | 11111111111111100010000010010000
-Stage MEM:           :   Zero               | 0
-Stage MEM:           :   MainALUOutput      | 00000000000000000000000000000101
-Stage MEM:           :   ReadData2          | 00000000000000000000000000000101
-Stage MEM:           :   RegDstOutput       | 10001
-Stage MEM:           :   Data Memory Output | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   Branch Gate Output | 0
-
-Stage WB:           :   C_Signal MemtoReg   | 0
-Stage WB:           :   C_Signal RegWrite   | 1
-Stage WB:           :   Data Memory Output  | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage WB:           :     Main ALU Result   | 00000000000000000000000000000110
-Stage WB:           :     Reg Dst Output    | 10000
-Stage WB:           :   Mem to Reg Output   | 00000000000000000000000000000110
-
-
-******************************************************************
-Clock               :          Clock       | 0
-Stage IF:           :           PC         | zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-Stage IF:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage IF:           :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-Stage ID: IF|ID OUT :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID: IF|ID OUT :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :       Read Data 2    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :       Sign Extend    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :            RT        | xxxxx
-Stage ID:           :            RD        | xxxxx
-Stage ID:           :    C_Signal RegDst   | x
-Stage ID:           :    C_Signal ALUSrc   | x
-Stage ID:           :    C_Signal MemtoReg | x
-Stage ID:           :    C_Signal RegWrite | x
-Stage ID:           :    C_Signal MemRead  | x
-Stage ID:           :    C_Signal MemWrite | x
-Stage ID:           :    C_Signal Branch   | x
-Stage ID:           :    C_Signal ALUOp    | xx
-
-Stage EX:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       ReadData2      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       SignExtend     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :           RT         | xxxxx
-Stage EX:           :           RD         | xxxxx
-Stage EX:           :           SLL        | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx00
-Stage EX:           :       Branch ALU     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       MUX ALU Src    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       Main ALU       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :          Zero        | x
-Stage EX:           :  ALU Control Output  | xxxx
-Stage EX:           :       MUX RegDst     | xxxxx
-Stage EX:           :   C_Signal RegDst    | x
-Stage EX:           :   C_Signal ALUSrc    | x
-Stage EX:           :   C_Signal MemtoReg  | x
-Stage EX:           :   C_Signal RegWrite  | x
-Stage EX:           :   C_Signal MemRead   | x
-Stage EX:           :   C_Signal MemWrite  | x
-Stage EX:           :   C_Signal Branch    | x
-Stage EX:           :   C_Signal ALUOp     | xx
-
-Stage MEM:           :   C_Signal MemtoReg  | x
-Stage MEM:           :   C_Signal RegWrite  | x
-Stage MEM:           :   C_Signal MemRead   | x
-Stage MEM:           :   C_Signal MemWrite  | x
-Stage MEM:           :   C_Signal Branch    | x
-Stage MEM:           :   BranchALUOutput    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   Zero               | x
-Stage MEM:           :   MainALUOutput      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   ReadData2          | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   RegDstOutput       | xxxxx
-Stage MEM:           :   Data Memory Output | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   Branch Gate Output | x
-
-Stage WB:           :   C_Signal MemtoReg   | 0
-Stage WB:           :   C_Signal RegWrite   | 1
-Stage WB:           :   Data Memory Output  | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage WB:           :     Main ALU Result   | 00000000000000000000000000000101
-Stage WB:           :     Reg Dst Output    | 10001
-Stage WB:           :   Mem to Reg Output   | 00000000000000000000000000000101
-
-
-******************************************************************
-Clock               :          Clock       | 1
-Stage IF:           :           PC         | 00000000000000000000000000001000
-Stage IF:           :         PC + 4       | 00000000000000000000000000001100
-Stage IF:           :       Instruction    | 00000010000100011001000000100000
-
-Stage ID: IF|ID OUT :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID: IF|ID OUT :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :       Read Data 2    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :       Sign Extend    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :            RT        | xxxxx
-Stage ID:           :            RD        | xxxxx
-Stage ID:           :    C_Signal RegDst   | x
-Stage ID:           :    C_Signal ALUSrc   | x
-Stage ID:           :    C_Signal MemtoReg | x
-Stage ID:           :    C_Signal RegWrite | x
-Stage ID:           :    C_Signal MemRead  | x
-Stage ID:           :    C_Signal MemWrite | x
-Stage ID:           :    C_Signal Branch   | x
-Stage ID:           :    C_Signal ALUOp    | xx
-
-Stage EX:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       ReadData2      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       SignExtend     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :           RT         | xxxxx
-Stage EX:           :           RD         | xxxxx
-Stage EX:           :           SLL        | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx00
-Stage EX:           :       Branch ALU     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       MUX ALU Src    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       Main ALU       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :          Zero        | x
-Stage EX:           :  ALU Control Output  | xxxx
-Stage EX:           :       MUX RegDst     | xxxxx
-Stage EX:           :   C_Signal RegDst    | x
-Stage EX:           :   C_Signal ALUSrc    | x
-Stage EX:           :   C_Signal MemtoReg  | x
-Stage EX:           :   C_Signal RegWrite  | x
-Stage EX:           :   C_Signal MemRead   | x
-Stage EX:           :   C_Signal MemWrite  | x
-Stage EX:           :   C_Signal Branch    | x
-Stage EX:           :   C_Signal ALUOp     | xx
-
-Stage MEM:           :   C_Signal MemtoReg  | x
-Stage MEM:           :   C_Signal RegWrite  | x
-Stage MEM:           :   C_Signal MemRead   | x
-Stage MEM:           :   C_Signal MemWrite  | x
-Stage MEM:           :   C_Signal Branch    | x
-Stage MEM:           :   BranchALUOutput    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   Zero               | x
-Stage MEM:           :   MainALUOutput      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   ReadData2          | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   RegDstOutput       | xxxxx
-Stage MEM:           :   Data Memory Output | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   Branch Gate Output | x
-
-Stage WB:           :   C_Signal MemtoReg   | x
-Stage WB:           :   C_Signal RegWrite   | x
-Stage WB:           :   Data Memory Output  | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage WB:           :     Main ALU Result   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage WB:           :     Reg Dst Output    | xxxxx
-Stage WB:           :   Mem to Reg Output   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-
-******************************************************************
-Clock               :          Clock       | 0
-Stage IF:           :           PC         | zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-Stage IF:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage IF:           :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-Stage ID: IF|ID OUT :         PC + 4       | 00000000000000000000000000001100
-Stage ID: IF|ID OUT :       Instruction    | 00000010000100011001000000100000
-Stage ID:           :       Read Data 1    | 00000000000000000000000000000110
-Stage ID:           :       Read Data 2    | 00000000000000000000000000000101
-Stage ID:           :       Sign Extend    | 11111111111111111001000000100000
-Stage ID:           :            RT        | 10001
-Stage ID:           :            RD        | 10010
-Stage ID:           :    C_Signal RegDst   | 1
-Stage ID:           :    C_Signal ALUSrc   | 0
-Stage ID:           :    C_Signal MemtoReg | 0
-Stage ID:           :    C_Signal RegWrite | 1
-Stage ID:           :    C_Signal MemRead  | 0
-Stage ID:           :    C_Signal MemWrite | 0
-Stage ID:           :    C_Signal Branch   | 0
-Stage ID:           :    C_Signal ALUOp    | 10
-
-Stage EX:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       ReadData2      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       SignExtend     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :           RT         | xxxxx
-Stage EX:           :           RD         | xxxxx
-Stage EX:           :           SLL        | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx00
-Stage EX:           :       Branch ALU     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       MUX ALU Src    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       Main ALU       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :          Zero        | x
-Stage EX:           :  ALU Control Output  | xxxx
-Stage EX:           :       MUX RegDst     | xxxxx
-Stage EX:           :   C_Signal RegDst    | x
-Stage EX:           :   C_Signal ALUSrc    | x
-Stage EX:           :   C_Signal MemtoReg  | x
-Stage EX:           :   C_Signal RegWrite  | x
-Stage EX:           :   C_Signal MemRead   | x
-Stage EX:           :   C_Signal MemWrite  | x
-Stage EX:           :   C_Signal Branch    | x
-Stage EX:           :   C_Signal ALUOp     | xx
-
-Stage MEM:           :   C_Signal MemtoReg  | x
-Stage MEM:           :   C_Signal RegWrite  | x
-Stage MEM:           :   C_Signal MemRead   | x
-Stage MEM:           :   C_Signal MemWrite  | x
-Stage MEM:           :   C_Signal Branch    | x
-Stage MEM:           :   BranchALUOutput    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   Zero               | x
-Stage MEM:           :   MainALUOutput      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   ReadData2          | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   RegDstOutput       | xxxxx
-Stage MEM:           :   Data Memory Output | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   Branch Gate Output | x
-
-Stage WB:           :   C_Signal MemtoReg   | x
-Stage WB:           :   C_Signal RegWrite   | x
-Stage WB:           :   Data Memory Output  | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage WB:           :     Main ALU Result   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage WB:           :     Reg Dst Output    | xxxxx
-Stage WB:           :   Mem to Reg Output   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-
-******************************************************************
-Clock               :          Clock       | 1
-Stage IF:           :           PC         | zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-Stage IF:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage IF:           :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-Stage ID: IF|ID OUT :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID: IF|ID OUT :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :       Read Data 2    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :       Sign Extend    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage ID:           :            RS        | xxxxx
 Stage ID:           :            RT        | xxxxx
 Stage ID:           :            RD        | xxxxx
 Stage ID:           :    C_Signal RegDst   | x
@@ -542,15 +314,18 @@ Stage ID:           :    C_Signal Branch   | x
 Stage ID:           :    C_Signal ALUOp    | xx
 
 Stage EX:           :         PC + 4       | 00000000000000000000000000001100
-Stage EX:           :       ReadData1      | 00000000000000000000000000000110
-Stage EX:           :       ReadData2      | 00000000000000000000000000000101
+Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :       ReadData2      | 00000000000000000000000000001010
 Stage EX:           :       SignExtend     | 11111111111111111001000000100000
+Stage EX:           :           RS         | 10000
 Stage EX:           :           RT         | 10001
 Stage EX:           :           RD         | 10010
 Stage EX:           :           SLL        | 11111111111111100100000010000000
 Stage EX:           :       Branch ALU     | 11111111111111100100000010001100
-Stage EX:           :       MUX ALU Src    | 00000000000000000000000000000101
-Stage EX:           :       Main ALU       | 00000000000000000000000000001011
+Stage EX:           :       MUX ALU Src    | 00000000000000000000000000000010
+Stage EX:           :     MUX Forward i0   | 00000000000000000000000000001100
+Stage EX:           :     MUX Forward i1   | 00000000000000000000000000000010
+Stage EX:           :       Main ALU       | 00000000000000000000000000001110
 Stage EX:           :          Zero        | 0
 Stage EX:           :  ALU Control Output  | 0010
 Stage EX:           :       MUX RegDst     | 10010
@@ -563,30 +338,33 @@ Stage EX:           :   C_Signal MemWrite  | 0
 Stage EX:           :   C_Signal Branch    | 0
 Stage EX:           :   C_Signal ALUOp     | 10
 
-Stage MEM:           :   C_Signal MemtoReg  | x
-Stage MEM:           :   C_Signal RegWrite  | x
-Stage MEM:           :   C_Signal MemRead   | x
-Stage MEM:           :   C_Signal MemWrite  | x
-Stage MEM:           :   C_Signal Branch    | x
-Stage MEM:           :   BranchALUOutput    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   Zero               | x
-Stage MEM:           :   MainALUOutput      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   ReadData2          | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   RegDstOutput       | xxxxx
+Stage MEM:           :   C_Signal MemtoReg  | 0
+Stage MEM:           :   C_Signal RegWrite  | 1
+Stage MEM:           :   C_Signal MemRead   | 0
+Stage MEM:           :   C_Signal MemWrite  | 0
+Stage MEM:           :   C_Signal Branch    | 0
+Stage MEM:           :   BranchALUOutput    | 11111111111111100010000010010000
+Stage MEM:           :   Zero               | 0
+Stage MEM:           :   MainALUOutput      | 00000000000000000000000000000010
+Stage MEM:           :   ReadData2          | 00000000000000000000000000001010
+Stage MEM:           :   RegDstOutput       | 10001
 Stage MEM:           :   Data Memory Output | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   Branch Gate Output | x
+Stage MEM:           :   Branch Gate Output | 0
 
-Stage WB:           :   C_Signal MemtoReg   | x
-Stage WB:           :   C_Signal RegWrite   | x
+Stage WB:           :   C_Signal MemtoReg   | 0
+Stage WB:           :   C_Signal RegWrite   | 1
 Stage WB:           :   Data Memory Output  | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage WB:           :     Main ALU Result   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage WB:           :     Reg Dst Output    | xxxxx
-Stage WB:           :   Mem to Reg Output   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage WB:           :     Main ALU Result   | 00000000000000000000000000001100
+Stage WB:           :     Reg Dst Output    | 10000
+Stage WB:           :   Mem to Reg Output   | 00000000000000000000000000001100
 
 
 ******************************************************************
+ForwardingUnit      :        ForwardA      | 00
+ForwardingUnit      :        ForwardB      | 00
+
 Clock               :          Clock       | 0
-Stage IF:           :           PC         | zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+Stage IF:           :           PC         | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -595,6 +373,7 @@ Stage ID: IF|ID OUT :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 2    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Sign Extend    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage ID:           :            RS        | xxxxx
 Stage ID:           :            RT        | xxxxx
 Stage ID:           :            RD        | xxxxx
 Stage ID:           :    C_Signal RegDst   | x
@@ -610,11 +389,14 @@ Stage EX:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData2      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       SignExtend     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :           RS         | xxxxx
 Stage EX:           :           RT         | xxxxx
 Stage EX:           :           RD         | xxxxx
 Stage EX:           :           SLL        | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx00
 Stage EX:           :       Branch ALU     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       MUX ALU Src    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i0   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i1   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       Main ALU       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :          Zero        | x
 Stage EX:           :  ALU Control Output  | xxxx
@@ -635,31 +417,35 @@ Stage MEM:           :   C_Signal MemWrite  | 0
 Stage MEM:           :   C_Signal Branch    | 0
 Stage MEM:           :   BranchALUOutput    | 11111111111111100100000010001100
 Stage MEM:           :   Zero               | 0
-Stage MEM:           :   MainALUOutput      | 00000000000000000000000000001011
-Stage MEM:           :   ReadData2          | 00000000000000000000000000000101
+Stage MEM:           :   MainALUOutput      | 00000000000000000000000000001110
+Stage MEM:           :   ReadData2          | 00000000000000000000000000001010
 Stage MEM:           :   RegDstOutput       | 10010
 Stage MEM:           :   Data Memory Output | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage MEM:           :   Branch Gate Output | 0
 
-Stage WB:           :   C_Signal MemtoReg   | x
-Stage WB:           :   C_Signal RegWrite   | x
+Stage WB:           :   C_Signal MemtoReg   | 0
+Stage WB:           :   C_Signal RegWrite   | 1
 Stage WB:           :   Data Memory Output  | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage WB:           :     Main ALU Result   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage WB:           :     Reg Dst Output    | xxxxx
-Stage WB:           :   Mem to Reg Output   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage WB:           :     Main ALU Result   | 00000000000000000000000000000010
+Stage WB:           :     Reg Dst Output    | 10001
+Stage WB:           :   Mem to Reg Output   | 00000000000000000000000000000010
 
 
 ******************************************************************
+ForwardingUnit      :        ForwardA      | 00
+ForwardingUnit      :        ForwardB      | 00
+
 Clock               :          Clock       | 1
-Stage IF:           :           PC         | zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
-Stage IF:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage IF:           :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage IF:           :           PC         | 00000000000000000000000000001100
+Stage IF:           :         PC + 4       | 00000000000000000000000000010000
+Stage IF:           :       Instruction    | 10101100000011000000000000000100
 
 Stage ID: IF|ID OUT :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID: IF|ID OUT :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 2    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Sign Extend    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage ID:           :            RS        | xxxxx
 Stage ID:           :            RT        | xxxxx
 Stage ID:           :            RD        | xxxxx
 Stage ID:           :    C_Signal RegDst   | x
@@ -675,11 +461,14 @@ Stage EX:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData2      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       SignExtend     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :           RS         | xxxxx
 Stage EX:           :           RT         | xxxxx
 Stage EX:           :           RD         | xxxxx
 Stage EX:           :           SLL        | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx00
 Stage EX:           :       Branch ALU     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       MUX ALU Src    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i0   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i1   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       Main ALU       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :          Zero        | x
 Stage EX:           :  ALU Control Output  | xxxx
@@ -709,79 +498,17 @@ Stage MEM:           :   Branch Gate Output | x
 Stage WB:           :   C_Signal MemtoReg   | 0
 Stage WB:           :   C_Signal RegWrite   | 1
 Stage WB:           :   Data Memory Output  | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage WB:           :     Main ALU Result   | 00000000000000000000000000001011
+Stage WB:           :     Main ALU Result   | 00000000000000000000000000001110
 Stage WB:           :     Reg Dst Output    | 10010
-Stage WB:           :   Mem to Reg Output   | 00000000000000000000000000001011
+Stage WB:           :   Mem to Reg Output   | 00000000000000000000000000001110
 
 
 ******************************************************************
+ForwardingUnit      :        ForwardA      | 00
+ForwardingUnit      :        ForwardB      | 00
+
 Clock               :          Clock       | 0
-Stage IF:           :           PC         | 00000000000000000000000000001100
-Stage IF:           :         PC + 4       | 00000000000000000000000000010000
-Stage IF:           :       Instruction    | 10101100000011000000000000000100
-
-Stage ID: IF|ID OUT :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID: IF|ID OUT :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :       Read Data 2    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :       Sign Extend    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage ID:           :            RT        | xxxxx
-Stage ID:           :            RD        | xxxxx
-Stage ID:           :    C_Signal RegDst   | x
-Stage ID:           :    C_Signal ALUSrc   | x
-Stage ID:           :    C_Signal MemtoReg | x
-Stage ID:           :    C_Signal RegWrite | x
-Stage ID:           :    C_Signal MemRead  | x
-Stage ID:           :    C_Signal MemWrite | x
-Stage ID:           :    C_Signal Branch   | x
-Stage ID:           :    C_Signal ALUOp    | xx
-
-Stage EX:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       ReadData2      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       SignExtend     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :           RT         | xxxxx
-Stage EX:           :           RD         | xxxxx
-Stage EX:           :           SLL        | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx00
-Stage EX:           :       Branch ALU     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       MUX ALU Src    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :       Main ALU       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage EX:           :          Zero        | x
-Stage EX:           :  ALU Control Output  | xxxx
-Stage EX:           :       MUX RegDst     | xxxxx
-Stage EX:           :   C_Signal RegDst    | x
-Stage EX:           :   C_Signal ALUSrc    | x
-Stage EX:           :   C_Signal MemtoReg  | x
-Stage EX:           :   C_Signal RegWrite  | x
-Stage EX:           :   C_Signal MemRead   | x
-Stage EX:           :   C_Signal MemWrite  | x
-Stage EX:           :   C_Signal Branch    | x
-Stage EX:           :   C_Signal ALUOp     | xx
-
-Stage MEM:           :   C_Signal MemtoReg  | x
-Stage MEM:           :   C_Signal RegWrite  | x
-Stage MEM:           :   C_Signal MemRead   | x
-Stage MEM:           :   C_Signal MemWrite  | x
-Stage MEM:           :   C_Signal Branch    | x
-Stage MEM:           :   BranchALUOutput    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   Zero               | x
-Stage MEM:           :   MainALUOutput      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   ReadData2          | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   RegDstOutput       | xxxxx
-Stage MEM:           :   Data Memory Output | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage MEM:           :   Branch Gate Output | x
-
-Stage WB:           :   C_Signal MemtoReg   | x
-Stage WB:           :   C_Signal RegWrite   | x
-Stage WB:           :   Data Memory Output  | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage WB:           :     Main ALU Result   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Stage WB:           :     Reg Dst Output    | xxxxx
-Stage WB:           :   Mem to Reg Output   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-
-
-******************************************************************
-Clock               :          Clock       | 1
-Stage IF:           :           PC         | zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+Stage IF:           :           PC         | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -790,6 +517,7 @@ Stage ID: IF|ID OUT :       Instruction    | 10101100000011000000000000000100
 Stage ID:           :       Read Data 1    | 00000000000000000000000000000000
 Stage ID:           :       Read Data 2    | 00000000000000000000000010000100
 Stage ID:           :       Sign Extend    | 00000000000000000000000000000100
+Stage ID:           :            RS        | 00000
 Stage ID:           :            RT        | 01100
 Stage ID:           :            RD        | 00000
 Stage ID:           :    C_Signal RegDst   | 0
@@ -805,11 +533,14 @@ Stage EX:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData2      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       SignExtend     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :           RS         | xxxxx
 Stage EX:           :           RT         | xxxxx
 Stage EX:           :           RD         | xxxxx
 Stage EX:           :           SLL        | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx00
 Stage EX:           :       Branch ALU     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       MUX ALU Src    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i0   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i1   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       Main ALU       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :          Zero        | x
 Stage EX:           :  ALU Control Output  | xxxx
@@ -845,8 +576,11 @@ Stage WB:           :   Mem to Reg Output   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 ******************************************************************
-Clock               :          Clock       | 0
-Stage IF:           :           PC         | zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+ForwardingUnit      :        ForwardA      | 00
+ForwardingUnit      :        ForwardB      | 00
+
+Clock               :          Clock       | 1
+Stage IF:           :           PC         | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -855,6 +589,7 @@ Stage ID: IF|ID OUT :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 2    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Sign Extend    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage ID:           :            RS        | xxxxx
 Stage ID:           :            RT        | xxxxx
 Stage ID:           :            RD        | xxxxx
 Stage ID:           :    C_Signal RegDst   | x
@@ -870,11 +605,14 @@ Stage EX:           :         PC + 4       | 00000000000000000000000000010000
 Stage EX:           :       ReadData1      | 00000000000000000000000000000000
 Stage EX:           :       ReadData2      | 00000000000000000000000010000100
 Stage EX:           :       SignExtend     | 00000000000000000000000000000100
+Stage EX:           :           RS         | 00000
 Stage EX:           :           RT         | 01100
 Stage EX:           :           RD         | 00000
 Stage EX:           :           SLL        | 00000000000000000000000000010000
 Stage EX:           :       Branch ALU     | 00000000000000000000000000100000
 Stage EX:           :       MUX ALU Src    | 00000000000000000000000000000100
+Stage EX:           :     MUX Forward i0   | 00000000000000000000000000000000
+Stage EX:           :     MUX Forward i1   | 00000000000000000000000010000100
 Stage EX:           :       Main ALU       | 00000000000000000000000000000100
 Stage EX:           :          Zero        | 0
 Stage EX:           :  ALU Control Output  | 0010
@@ -910,8 +648,11 @@ Stage WB:           :   Mem to Reg Output   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 ******************************************************************
-Clock               :          Clock       | 1
-Stage IF:           :           PC         | zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+ForwardingUnit      :        ForwardA      | 00
+ForwardingUnit      :        ForwardB      | 00
+
+Clock               :          Clock       | 0
+Stage IF:           :           PC         | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -920,6 +661,7 @@ Stage ID: IF|ID OUT :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 2    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Sign Extend    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage ID:           :            RS        | xxxxx
 Stage ID:           :            RT        | xxxxx
 Stage ID:           :            RD        | xxxxx
 Stage ID:           :    C_Signal RegDst   | x
@@ -935,11 +677,14 @@ Stage EX:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData2      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       SignExtend     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :           RS         | xxxxx
 Stage EX:           :           RT         | xxxxx
 Stage EX:           :           RD         | xxxxx
 Stage EX:           :           SLL        | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx00
 Stage EX:           :       Branch ALU     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       MUX ALU Src    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i0   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i1   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       Main ALU       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :          Zero        | x
 Stage EX:           :  ALU Control Output  | xxxx
@@ -975,8 +720,11 @@ Stage WB:           :   Mem to Reg Output   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 ******************************************************************
-Clock               :          Clock       | 0
-Stage IF:           :           PC         | zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+ForwardingUnit      :        ForwardA      | 00
+ForwardingUnit      :        ForwardB      | 00
+
+Clock               :          Clock       | 1
+Stage IF:           :           PC         | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -985,6 +733,7 @@ Stage ID: IF|ID OUT :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 2    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Sign Extend    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage ID:           :            RS        | xxxxx
 Stage ID:           :            RT        | xxxxx
 Stage ID:           :            RD        | xxxxx
 Stage ID:           :    C_Signal RegDst   | x
@@ -1000,11 +749,14 @@ Stage EX:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData2      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       SignExtend     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :           RS         | xxxxx
 Stage EX:           :           RT         | xxxxx
 Stage EX:           :           RD         | xxxxx
 Stage EX:           :           SLL        | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx00
 Stage EX:           :       Branch ALU     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       MUX ALU Src    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i0   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i1   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       Main ALU       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :          Zero        | x
 Stage EX:           :  ALU Control Output  | xxxx
@@ -1040,7 +792,10 @@ Stage WB:           :   Mem to Reg Output   | 00000000000000000000000000000100
 
 
 ******************************************************************
-Clock               :          Clock       | 1
+ForwardingUnit      :        ForwardA      | 00
+ForwardingUnit      :        ForwardB      | 00
+
+Clock               :          Clock       | 0
 Stage IF:           :           PC         | 00000000000000000000000000010000
 Stage IF:           :         PC + 4       | 00000000000000000000000000010100
 Stage IF:           :       Instruction    | 10001100000011010000000000000100
@@ -1050,6 +805,7 @@ Stage ID: IF|ID OUT :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 2    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Sign Extend    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage ID:           :            RS        | xxxxx
 Stage ID:           :            RT        | xxxxx
 Stage ID:           :            RD        | xxxxx
 Stage ID:           :    C_Signal RegDst   | x
@@ -1065,11 +821,14 @@ Stage EX:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData2      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       SignExtend     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :           RS         | xxxxx
 Stage EX:           :           RT         | xxxxx
 Stage EX:           :           RD         | xxxxx
 Stage EX:           :           SLL        | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx00
 Stage EX:           :       Branch ALU     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       MUX ALU Src    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i0   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i1   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       Main ALU       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :          Zero        | x
 Stage EX:           :  ALU Control Output  | xxxx
@@ -1105,8 +864,11 @@ Stage WB:           :   Mem to Reg Output   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 ******************************************************************
-Clock               :          Clock       | 0
-Stage IF:           :           PC         | zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+ForwardingUnit      :        ForwardA      | 00
+ForwardingUnit      :        ForwardB      | 00
+
+Clock               :          Clock       | 1
+Stage IF:           :           PC         | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -1115,6 +877,7 @@ Stage ID: IF|ID OUT :       Instruction    | 10001100000011010000000000000100
 Stage ID:           :       Read Data 1    | 00000000000000000000000000000000
 Stage ID:           :       Read Data 2    | 00000000000000000000000000000000
 Stage ID:           :       Sign Extend    | 00000000000000000000000000000100
+Stage ID:           :            RS        | 00000
 Stage ID:           :            RT        | 01101
 Stage ID:           :            RD        | 00000
 Stage ID:           :    C_Signal RegDst   | 0
@@ -1130,11 +893,14 @@ Stage EX:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData2      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       SignExtend     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :           RS         | xxxxx
 Stage EX:           :           RT         | xxxxx
 Stage EX:           :           RD         | xxxxx
 Stage EX:           :           SLL        | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx00
 Stage EX:           :       Branch ALU     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       MUX ALU Src    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i0   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i1   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       Main ALU       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :          Zero        | x
 Stage EX:           :  ALU Control Output  | xxxx
@@ -1170,8 +936,11 @@ Stage WB:           :   Mem to Reg Output   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 ******************************************************************
-Clock               :          Clock       | 1
-Stage IF:           :           PC         | zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+ForwardingUnit      :        ForwardA      | 00
+ForwardingUnit      :        ForwardB      | 00
+
+Clock               :          Clock       | 0
+Stage IF:           :           PC         | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -1180,6 +949,7 @@ Stage ID: IF|ID OUT :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 2    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Sign Extend    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage ID:           :            RS        | xxxxx
 Stage ID:           :            RT        | xxxxx
 Stage ID:           :            RD        | xxxxx
 Stage ID:           :    C_Signal RegDst   | x
@@ -1195,11 +965,14 @@ Stage EX:           :         PC + 4       | 00000000000000000000000000010100
 Stage EX:           :       ReadData1      | 00000000000000000000000000000000
 Stage EX:           :       ReadData2      | 00000000000000000000000000000000
 Stage EX:           :       SignExtend     | 00000000000000000000000000000100
+Stage EX:           :           RS         | 00000
 Stage EX:           :           RT         | 01101
 Stage EX:           :           RD         | 00000
 Stage EX:           :           SLL        | 00000000000000000000000000010000
 Stage EX:           :       Branch ALU     | 00000000000000000000000000100100
 Stage EX:           :       MUX ALU Src    | 00000000000000000000000000000100
+Stage EX:           :     MUX Forward i0   | 00000000000000000000000000000000
+Stage EX:           :     MUX Forward i1   | 00000000000000000000000000000000
 Stage EX:           :       Main ALU       | 00000000000000000000000000000100
 Stage EX:           :          Zero        | 0
 Stage EX:           :  ALU Control Output  | 0010
@@ -1235,8 +1008,11 @@ Stage WB:           :   Mem to Reg Output   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 ******************************************************************
-Clock               :          Clock       | 0
-Stage IF:           :           PC         | zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+ForwardingUnit      :        ForwardA      | 00
+ForwardingUnit      :        ForwardB      | 00
+
+Clock               :          Clock       | 1
+Stage IF:           :           PC         | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -1245,6 +1021,7 @@ Stage ID: IF|ID OUT :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 2    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Sign Extend    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage ID:           :            RS        | xxxxx
 Stage ID:           :            RT        | xxxxx
 Stage ID:           :            RD        | xxxxx
 Stage ID:           :    C_Signal RegDst   | x
@@ -1260,11 +1037,14 @@ Stage EX:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData2      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       SignExtend     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :           RS         | xxxxx
 Stage EX:           :           RT         | xxxxx
 Stage EX:           :           RD         | xxxxx
 Stage EX:           :           SLL        | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx00
 Stage EX:           :       Branch ALU     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       MUX ALU Src    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i0   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i1   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       Main ALU       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :          Zero        | x
 Stage EX:           :  ALU Control Output  | xxxx
@@ -1300,8 +1080,11 @@ Stage WB:           :   Mem to Reg Output   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 
 ******************************************************************
-Clock               :          Clock       | 1
-Stage IF:           :           PC         | zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz
+ForwardingUnit      :        ForwardA      | 00
+ForwardingUnit      :        ForwardB      | 00
+
+Clock               :          Clock       | 0
+Stage IF:           :           PC         | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage IF:           :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
@@ -1310,6 +1093,7 @@ Stage ID: IF|ID OUT :       Instruction    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 1    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Read Data 2    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage ID:           :       Sign Extend    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage ID:           :            RS        | xxxxx
 Stage ID:           :            RT        | xxxxx
 Stage ID:           :            RD        | xxxxx
 Stage ID:           :    C_Signal RegDst   | x
@@ -1325,11 +1109,14 @@ Stage EX:           :         PC + 4       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData1      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       ReadData2      | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       SignExtend     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :           RS         | xxxxx
 Stage EX:           :           RT         | xxxxx
 Stage EX:           :           RD         | xxxxx
 Stage EX:           :           SLL        | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx00
 Stage EX:           :       Branch ALU     | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       MUX ALU Src    | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i0   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+Stage EX:           :     MUX Forward i1   | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :       Main ALU       | xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 Stage EX:           :          Zero        | x
 Stage EX:           :  ALU Control Output  | xxxx

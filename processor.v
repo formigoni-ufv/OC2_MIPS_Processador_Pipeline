@@ -14,6 +14,7 @@
 `include "signext.v"
 `include "sll.v"
 `include "pipelinestages.v"
+`include "forwarding_unit.v"
 
 module processor ();
 
@@ -23,7 +24,7 @@ module processor ();
 
 	//Fios da saída ou entrada de módulos, não pipelines
 	//IF STAGE
-	wire [31:0] PCSrcInput; //Proximo endereco do PC
+	wire[31:0] PCSrcInput; //Proximo endereco do PC
 	wire[31:0] PCOutput; //Saida do PC
 	wire[31:0] ALUPCPlus4Output; //Saida da ALU PC + 4
 	wire[31:0] instruction; //Instrucao que sai da Instruction Memory
@@ -34,6 +35,8 @@ module processor ();
 	//EX STAGE
 	wire[31:0] sllOutput;
 	wire[31:0] branchALUOutput;
+	wire[31:0] forwardingMUXALUi0;
+	wire[31:0] forwardingMUXALUi1;
 	wire[31:0] ALUSrcOutput;
 	wire[31:0] mainALUOutput;
 	wire zero;
@@ -54,6 +57,8 @@ module processor ();
 	wire CSignal_MemWrite; //Habilida escrita na memoria
 	wire CSignal_Branch; //Habilita o Branch
 	wire[1:0] CSignal_ALUOp; //Escolhe a operação da ALU
+	wire[1:0] CSignal_ForwardingMUX_ALUi0;
+	wire[1:0] CSignal_ForwardingMUX_ALUi1;
 
 	/*****************************************PIPELINED**********************************/
 	reg resetManual; //TODO substituir pelo reset chaveado
@@ -68,6 +73,7 @@ module processor ();
 	wire[31:0] PIPE_IDEX_OUT_ReadData1;
 	wire[31:0] PIPE_IDEX_OUT_ReadData2;
 	wire[31:0] PIPE_IDEX_OUT_SignExt;
+	wire[4:0] PIPE_IDEX_OUT_RS;
 	wire[4:0] PIPE_IDEX_OUT_RT;
 	wire[4:0] PIPE_IDEX_OUT_RD;
 	//Sinais de controle da pipeline ID/EX
@@ -93,9 +99,10 @@ module processor ();
 	wire PIPE_EXMEM_OUT_CSignal_WB_RegWrite;
 	wire PIPE_EXMEM_OUT_CSignal_WB_MemtoReg;
 
+	//Sinais de controle da pipeline MEM/WB
+	wire       PIPE_MEMWB_OUT_CSignal_RegWrite;
+	wire       PIPE_MEMWB_OUT_CSignal_MemtoReg;
 	//Fios de saida da pipeline MEM/WB
-	wire       PIPE_MEMWB_CSignal_RegWrite;
-	wire       PIPE_MEMWB_CSignal_MemtoReg;
 	wire[31:0] PIPE_MEMWB_DataMemoryOutput;
 	wire[31:0] PIPE_MEMWB_MainALUOutput;
 	wire[4:0]  PIPE_MEMWB_RegDstOutput;
@@ -114,7 +121,7 @@ module processor ();
 	/******************************Instruction Decode Stage******************************/
 	maincontrolunit ControlUnit(.op(PIPE_IFID_Instruction[31:26]), .regDst(CSignal_RegDst), .ALUSrc(CSignal_ALUSrc), .memtoReg(CSignal_MemtoReg), .regWrite(CSignal_RegWrite), .memRead(CSignal_MemRead), .memWrite(CSignal_MemWrite), .branch(CSignal_Branch), .ALUOp1(CSignal_ALUOp[1]), .ALUOp0(CSignal_ALUOp[0]) );
 
-	registerfile RegisterFile(.clk(clk), .reg1addr(PIPE_IFID_Instruction[25:21]), .reg2addr(PIPE_IFID_Instruction[20:16]), .writeRegister(PIPE_MEMWB_RegDstOutput), .writeData(memtoRegOutput), .regWrite(PIPE_MEMWB_CSignal_RegWrite), .reg1content(readData1),	.reg2content(readData2) );
+	registerfile RegisterFile(.clk(clk), .reg1addr(PIPE_IFID_Instruction[25:21]), .reg2addr(PIPE_IFID_Instruction[20:16]), .writeRegister(PIPE_MEMWB_RegDstOutput), .writeData(memtoRegOutput), .regWrite(PIPE_MEMWB_OUT_CSignal_RegWrite), .reg1content(readData1),	.reg2content(readData2) );
 
 	signext SignExt(.i0(PIPE_IFID_Instruction[15:0]), .out(signExtendOutput) );
 
@@ -126,6 +133,7 @@ module processor ();
 		.PIPEIN_ReadData1(readData1),
 		.PIPEIN_ReadData2(readData2),
 		.PIPEIN_SignExt(signExtendOutput),
+		.PIPEIN_RS(PIPE_IFID_Instruction[25:21]),
 		.PIPEIN_RT(PIPE_IFID_Instruction[20:16]),
 		.PIPEIN_RD(PIPE_IFID_Instruction[15:11]),
 
@@ -144,6 +152,7 @@ module processor ();
 		.PIPEOUT_ReadData1(PIPE_IDEX_OUT_ReadData1),
 		.PIPEOUT_ReadData2(PIPE_IDEX_OUT_ReadData2),
 		.PIPEOUT_SignExt(PIPE_IDEX_OUT_SignExt),
+		.PIPEOUT_RS(PIPE_IDEX_OUT_RS),
 		.PIPEOUT_RT(PIPE_IDEX_OUT_RT),
 		.PIPEOUT_RD(PIPE_IDEX_OUT_RD),
 
@@ -164,9 +173,13 @@ module processor ();
 
 	arithmeticlogicunit branchALU(.A(PIPE_IDEX_OUT_ALUPCPlus4Output), .B(sllOutput), .OP(4'b10), .OUT(branchALUOutput) );
 
-	multiplexorALUSrc ALUSrcMux(.i0(PIPE_IDEX_OUT_ReadData2), .i1(PIPE_IDEX_OUT_SignExt), .control(PIPE_IDEX_OUT_CSignal_EX_ALUSrc), .out(ALUSrcOutput) );
+	mainALUForwardingMUX ALUi0(.i0(PIPE_IDEX_OUT_ReadData1), .i1(memtoRegOutput), .i2(PIPE_EXMEM_OUT_MainALUOutput), .control(CSignal_ForwardingMUX_ALUi0), .out(forwardingMUXALUi0) );
 
-	arithmeticlogicunit mainALU(.A(PIPE_IDEX_OUT_ReadData1), .B(ALUSrcOutput), .OP(ALUControlOutput), .OUT(mainALUOutput), .zero(zero) );
+	mainALUForwardingMUX ALUi1(.i0(PIPE_IDEX_OUT_ReadData2), .i1(memtoRegOutput), .i2(PIPE_EXMEM_OUT_MainALUOutput), .control(CSignal_ForwardingMUX_ALUi1), .out(forwardingMUXALUi1) );
+
+	multiplexorALUSrc ALUSrcMux(.i0(forwardingMUXALUi1), .i1(PIPE_IDEX_OUT_SignExt), .control(PIPE_IDEX_OUT_CSignal_EX_ALUSrc), .out(ALUSrcOutput) );
+
+	arithmeticlogicunit mainALU(.A(forwardingMUXALUi0), .B(ALUSrcOutput), .OP(ALUControlOutput), .OUT(mainALUOutput), .zero(zero) );
 
 	alu_control ALUControl(.ALUOp(PIPE_IDEX_OUT_CSignal_EX_ALUOp), .funcCode(PIPE_IDEX_OUT_SignExt[5:0]), .aluCtrlOut(ALUControlOutput) );
 
@@ -202,6 +215,18 @@ module processor ();
 		.PIPEOUT_RegDstOutput(PIPE_EXMEM_OUT_RegDstOutput)
 	);
 
+	forwarding_unit ForwardingUnit(
+		.clk(clk),
+		.EX_MEM_RegWrite(PIPE_EXMEM_OUT_CSignal_WB_RegWrite),
+		.MEM_WB_RegWrite(PIPE_MEMWB_OUT_CSignal_RegWrite),
+		.ID_EX_Rs(PIPE_IDEX_OUT_RS),
+		.ID_EX_Rt(PIPE_IDEX_OUT_RT),
+		.EX_MEM_Rd(PIPE_EXMEM_OUT_RegDstOutput),
+		.MEM_WB_Rd(PIPE_MEMWB_RegDstOutput),
+		.ForwardA(CSignal_ForwardingMUX_ALUi0),
+		.ForwardB(CSignal_ForwardingMUX_ALUi1)
+	);
+
 	/******************************Memory Stage******************************/
 	andgate gate(.i0(PIPE_EXMEM_OUT_CSignal_MEM_Branch), .i1(PIPE_EXMEM_OUT_Zero), .out(branchGateOutput) );
 
@@ -219,8 +244,8 @@ module processor ();
 		.PIPEIN_RegDstOutput(PIPE_EXMEM_OUT_RegDstOutput),
 
 		//Control Vars OUT
-		.PIPEOUT_WB_RegWrite(PIPE_MEMWB_CSignal_RegWrite),
-		.PIPEOUT_WB_MemtoReg(PIPE_MEMWB_CSignal_MemtoReg),
+		.PIPEOUT_WB_RegWrite(PIPE_MEMWB_OUT_CSignal_RegWrite),
+		.PIPEOUT_WB_MemtoReg(PIPE_MEMWB_OUT_CSignal_MemtoReg),
 		//Data Vars OUT
 		.PIPEOUT_DataMemoryOutput(PIPE_MEMWB_DataMemoryOutput),
 		.PIPEOUT_MainALUOutput(PIPE_MEMWB_MainALUOutput),
@@ -228,7 +253,7 @@ module processor ();
 	);
 
 	/******************************Write Back Stage******************************/
-	multiplexorMemtoReg MemtoReg(.i0(PIPE_MEMWB_MainALUOutput), .i1(PIPE_MEMWB_DataMemoryOutput), .control(PIPE_MEMWB_CSignal_MemtoReg), .out(memtoRegOutput) );
+	multiplexorMemtoReg MemtoReg(.i0(PIPE_MEMWB_MainALUOutput), .i1(PIPE_MEMWB_DataMemoryOutput), .control(PIPE_MEMWB_OUT_CSignal_MemtoReg), .out(memtoRegOutput) );
 
 	/******************************************************************************************************************************************************************************************************/
 
@@ -247,6 +272,8 @@ module processor ();
 		f = $fopen("output.txt","a");
 
 		$fwrite(f,"\n******************************************************************\n");
+		$fwrite(f,"ForwardingUnit      :        ForwardA      | %b\n", CSignal_ForwardingMUX_ALUi0);
+		$fwrite(f,"ForwardingUnit      :        ForwardB      | %b\n\n", CSignal_ForwardingMUX_ALUi1);
 		$fwrite(f,"Clock               :          Clock       | %b\n", clk);
 		$fwrite(f,"Stage IF:           :           PC         | %b\n", PCOutput);
 		$fwrite(f,"Stage IF:           :         PC + 4       | %b\n", ALUPCPlus4Output);
@@ -257,6 +284,7 @@ module processor ();
 		$fwrite(f,"Stage ID:           :       Read Data 1    | %b\n", readData1);
 		$fwrite(f,"Stage ID:           :       Read Data 2    | %b\n", readData2);
 		$fwrite(f,"Stage ID:           :       Sign Extend    | %b\n", signExtendOutput);
+		$fwrite(f,"Stage ID:           :            RS        | %b\n", PIPE_IFID_Instruction[25:21]);
 		$fwrite(f,"Stage ID:           :            RT        | %b\n", PIPE_IFID_Instruction[20:16]);
 		$fwrite(f,"Stage ID:           :            RD        | %b\n", PIPE_IFID_Instruction[15:11]);
 		$fwrite(f,"Stage ID:           :    C_Signal RegDst   | %b\n", CSignal_RegDst);
@@ -272,11 +300,14 @@ module processor ();
 		$fwrite(f,"Stage EX:           :       ReadData1      | %b\n", PIPE_IDEX_OUT_ReadData1);
 		$fwrite(f,"Stage EX:           :       ReadData2      | %b\n", PIPE_IDEX_OUT_ReadData2);
 		$fwrite(f,"Stage EX:           :       SignExtend     | %b\n", PIPE_IDEX_OUT_SignExt);
+		$fwrite(f,"Stage EX:           :           RS         | %b\n", PIPE_IDEX_OUT_RS);
 		$fwrite(f,"Stage EX:           :           RT         | %b\n", PIPE_IDEX_OUT_RT);
 		$fwrite(f,"Stage EX:           :           RD         | %b\n", PIPE_IDEX_OUT_RD);
 		$fwrite(f,"Stage EX:           :           SLL        | %b\n", sllOutput);
 		$fwrite(f,"Stage EX:           :       Branch ALU     | %b\n", branchALUOutput);
 		$fwrite(f,"Stage EX:           :       MUX ALU Src    | %b\n", ALUSrcOutput);
+		$fwrite(f,"Stage EX:           :     MUX Forward i0   | %b\n", forwardingMUXALUi0);
+		$fwrite(f,"Stage EX:           :     MUX Forward i1   | %b\n", forwardingMUXALUi1);
 		$fwrite(f,"Stage EX:           :       Main ALU       | %b\n", mainALUOutput);
 		$fwrite(f,"Stage EX:           :          Zero        | %b\n", zero);
 		$fwrite(f,"Stage EX:           :  ALU Control Output  | %b\n", ALUControlOutput);
@@ -303,8 +334,8 @@ module processor ();
 		$fwrite(f,"Stage MEM:           :   Data Memory Output | %b\n", dataMemoryOutput);
 		$fwrite(f,"Stage MEM:           :   Branch Gate Output | %b\n\n", branchGateOutput);
 
-		$fwrite(f,"Stage WB:           :   C_Signal MemtoReg   | %b\n", PIPE_MEMWB_CSignal_MemtoReg);
-		$fwrite(f,"Stage WB:           :   C_Signal RegWrite   | %b\n", PIPE_MEMWB_CSignal_RegWrite);
+		$fwrite(f,"Stage WB:           :   C_Signal MemtoReg   | %b\n", PIPE_MEMWB_OUT_CSignal_MemtoReg);
+		$fwrite(f,"Stage WB:           :   C_Signal RegWrite   | %b\n", PIPE_MEMWB_OUT_CSignal_RegWrite);
 		$fwrite(f,"Stage WB:           :   Data Memory Output  | %b\n", PIPE_MEMWB_DataMemoryOutput);
 		$fwrite(f,"Stage WB:           :     Main ALU Result   | %b\n", PIPE_MEMWB_MainALUOutput);
 		$fwrite(f,"Stage WB:           :     Reg Dst Output    | %b\n", PIPE_MEMWB_RegDstOutput);
@@ -312,8 +343,6 @@ module processor ();
 
 		$fclose(f);
 	end
-
-	wire[31:0] nop;
 
 	initial begin
 	//Inicializando PC com 0
@@ -323,32 +352,26 @@ module processor ();
 	//Começando a Endereçar as instruções
 	#200 pcInManual = 4;
 	#200 clk = 0;
-	#200 pcInManual = nop;
-	#200 clk = 1;
-	#200 clk = 0;
-	#200 clk = 1;
-	#200 clk = 0;
 	#200 pcInManual = 8;
 	#200 clk = 1;
-	#200 pcInManual = nop;
+	#200 pcInManual = 32'bx;
 	#200 clk = 0;
 	#200 clk = 1;
 	#200 clk = 0;
-	#200 clk = 1;
 	#200 pcInManual = 12;
+	#200 clk = 1;
+	#200 pcInManual = 32'bx;
 	#200 clk = 0;
-	#200 pcInManual = nop;
 	#200 clk = 1;
 	#200 clk = 0;
 	#200 clk = 1;
-	#200 clk = 0;
 	#200 pcInManual = 16;
+	#200 clk = 0;
+	#200 pcInManual = 32'bx;
 	#200 clk = 1;
-	#200 pcInManual = nop;
 	#200 clk = 0;
 	#200 clk = 1;
 	#200 clk = 0;
-	#200 clk = 1;
 	end
 endmodule
 
@@ -425,8 +448,8 @@ endmodule
 // $display("Stage MEM:           :   Data Memory Output | %b", dataMemoryOutput);
 // $display("Stage MEM:           :   Branch Gate Output | %b\n", branchGateOutput);
 //
-// $display("Stage WB:           :   C_Signal MemtoReg   | %b", PIPE_MEMWB_CSignal_MemtoReg);
-// $display("Stage WB:           :   C_Signal RegWrite   | %b", PIPE_MEMWB_CSignal_RegWrite);
+// $display("Stage WB:           :   C_Signal MemtoReg   | %b", PIPE_MEMWB_OUT_CSignal_MemtoReg);
+// $display("Stage WB:           :   C_Signal RegWrite   | %b", PIPE_MEMWB_OUT_CSignal_RegWrite);
 // $display("Stage WB:           :   Data Memory Output  | %b", PIPE_MEMWB_DataMemoryOutput);
 // $display("Stage WB:           :     Main ALU Result   | %b", PIPE_MEMWB_MainALUOutput);
 // $display("Stage WB:           :     Reg Dst Output    | %b", PIPE_MEMWB_RegDstOutput);

@@ -1,42 +1,66 @@
  module forwarding_unit
 	(
-	input wire[31:0] ID_EX_rs,
-	input wire[31:0] ID_EX_rt,
-	input wire[31:0] EX_MEM_rd,
-	input wire[31:0] MEM_WB_rd,
-	input wire EX_MEM_EscreveReg,
-	input wire MEM_WB_EscreveReg,
-	output reg[1:0] ForwadA,
-	output reg[1:0] ForwadB
+	input wire clk,
+	input wire EX_MEM_RegWrite,
+	input wire MEM_WB_RegWrite,
+	input wire[4:0] ID_EX_Rs,
+	input wire[4:0] ID_EX_Rt,
+	input wire[4:0] EX_MEM_Rd,
+	input wire[4:0] MEM_WB_Rd,
+	output reg[1:0] ForwardA,
+	output reg[1:0] ForwardB
 	);
-	reg ForwardMEM;
-	initial begin
-        ForwardMEM = 0;
-	end
-	always@(*) begin
-        if(EX_MEM_EscreveReg) begin
-            if(EX_MEM_rd) begin
-                if(EX_MEM_rd == ID_EX_rs) begin
-                    ForwadA = 2'b10;
-                    ForwardMEM = 1;
-                end
-                else if(EX_MEM_rd == ID_EX_rt) begin
-                    ForwadB = 2'b10;
-                    ForwardMEM = 1;
-                end
-            end
-        end
-        //Resetar quando trocar ciclo, evitando conflito com o ciclo de clock anterior
-        ForwadA = 2'b00;
-        ForwadB = 2'b00;
-        if(ForwardMEM) ForwardMEM = 0;
-        else begin
-            if(MEM_WB_EscreveReg) begin
-                if(MEM_WB_rd) begin
-                    if(MEM_WB_rd == ID_EX_rs) ForwadA = 2'b01;
-                    if(MEM_WB_rd == ID_EX_rt) ForwadB = 2'b01;
-                end
-            end
-        end
+
+	always@(clk) begin
+
+		//Avoid dont cares
+		#10
+		ForwardA <= 2'b0;
+		ForwardB <= 2'b0;
+
+		#10
+		if((EX_MEM_RegWrite == 1) && (EX_MEM_Rd != 0)) begin
+			if(EX_MEM_Rd == ID_EX_Rs) ForwardA <= 2'b10;
+			if(EX_MEM_Rd == ID_EX_Rt) ForwardB <= 2'b10;
+		end
+
+		if( (MEM_WB_RegWrite == 1) && (MEM_WB_Rd != 0)) begin
+			if( !((EX_MEM_RegWrite == 1) && (EX_MEM_Rd != 0) && (EX_MEM_Rd == ID_EX_Rs)) )begin
+				if(MEM_WB_Rd == ID_EX_Rs) ForwardA <= 2'b01;
+			end
+
+			if( !((EX_MEM_RegWrite == 1) && (EX_MEM_Rd != 0) && (EX_MEM_Rd == ID_EX_Rt)) )begin
+				if(MEM_WB_Rd == ID_EX_Rt) ForwardB <= 2'b01;
+			end
+		end
+
 	end
 endmodule
+
+// module testbench();
+// 	reg clk;
+// 	reg EX_MEM_RegWrite;
+// 	reg MEM_WB_RegWrite;
+// 	reg[31:0] ID_EX_Rs;
+// 	reg[31:0] ID_EX_Rt;
+// 	reg[31:0] EX_MEM_Rd;
+// 	reg[31:0] MEM_WB_Rd;
+// 	wire[1:0] forwardA;
+// 	wire[1:0] forwardB;
+//
+// 	forwarding_unit ForwardingUnit(.clk(clk), .EX_MEM_RegWrite(EX_MEM_RegWrite), .MEM_WB_RegWrite(MEM_WB_RegWrite), .ID_EX_Rs(ID_EX_Rs), .ID_EX_Rt(ID_EX_Rt), .EX_MEM_Rd(EX_MEM_Rd), .MEM_WB_Rd(MEM_WB_Rd), .ForwardA(forwardA), .ForwardB(forwardB));
+//
+// 	initial begin
+// 		#50
+// 		clk <= 1;
+// 		EX_MEM_RegWrite <= 0;
+// 		MEM_WB_RegWrite <= 1;
+// 		ID_EX_Rs <= 10;
+// 		ID_EX_Rt <= 10;
+// 		EX_MEM_Rd <= 10;
+// 		MEM_WB_Rd <= 10;
+// 		#50
+// 		$display("Forward A: %b | Forward B: %b\n", forwardA, forwardB);
+// 	end
+//
+// endmodule

@@ -15,7 +15,7 @@ module registerfile(
 	initial begin
 		registers[0] = 0;
 		//OPTIONAL TESTING REGISTERS
-		registers[8] = 2;		//$t0
+		registers[8] = 8;		//$t0
 		registers[9] = 4;		//$t1
 		registers[10] = 10;	//$t2
 		registers[11] = 5;	//$t3

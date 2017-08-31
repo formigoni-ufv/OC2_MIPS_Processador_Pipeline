@@ -39,11 +39,11 @@ module PIPE_ID_EX(
 	//INPUT ON ID FASE
 	input wire[31:0] PIPEIN_PCPlus4, input wire[31:0] PIPEIN_ReadData1,
 	input wire[31:0] PIPEIN_ReadData2, input wire[31:0] PIPEIN_SignExt,
-	input wire[4:0] PIPEIN_RT, input wire[4:0] PIPEIN_RD,
+	input wire[4:0] PIPEIN_RS, input wire[4:0] PIPEIN_RT, input wire[4:0] PIPEIN_RD,
 	//OUTPUT ON EX FASE
 	output reg[31:0] PIPEOUT_PCPlus4, output reg[31:0] PIPEOUT_ReadData1,
 	output reg[31:0] PIPEOUT_ReadData2, output reg[31:0] PIPEOUT_SignExt,
-	output reg[4:0] PIPEOUT_RT, output reg[4:0] PIPEOUT_RD
+	output reg[4:0] PIPEOUT_RS, output reg[4:0] PIPEOUT_RT, output reg[4:0] PIPEOUT_RD
 	);
 
 	//ID STAGE
@@ -66,6 +66,7 @@ module PIPE_ID_EX(
 		PIPEOUT_ReadData1 <= PIPEIN_ReadData1;
 		PIPEOUT_ReadData2 <= PIPEIN_ReadData2;
 		PIPEOUT_SignExt   <= PIPEIN_SignExt;
+		PIPEOUT_RS        <= PIPEIN_RS;
 		PIPEOUT_RT        <= PIPEIN_RT;
 		PIPEOUT_RD        <= PIPEIN_RD;
 	end
