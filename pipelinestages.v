@@ -1,12 +1,14 @@
-module PIPE_IF_ID(input wire clk, input wire[31:0] PIPEIN_PCPlus4, input wire[31:0] PIPEIN_InsMemory, output reg[31:0] PIPEOUT_PCPlus4, output reg[31:0] PIPEOUT_InsMemory);
+module PIPE_IF_ID(input wire clk, input wire IF_ID_Write, input wire[31:0] PIPEIN_PCPlus4, input wire[31:0] PIPEIN_InsMemory, output reg[31:0] PIPEOUT_PCPlus4, output reg[31:0] PIPEOUT_InsMemory);
 
 	reg[31:0] PCPlus4;
 	reg[31:0] InstructionMemory;
 
 	//IF STAGE
 	always@(clk)begin
-		PIPEOUT_PCPlus4   <= PIPEIN_PCPlus4;
-		PIPEOUT_InsMemory <= PIPEIN_InsMemory;
+		if(IF_ID_Write == 1)begin
+			PIPEOUT_PCPlus4   <= PIPEIN_PCPlus4;
+			PIPEOUT_InsMemory <= PIPEIN_InsMemory;
+		end
 	end
 
 	//ID STAGE

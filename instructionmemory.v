@@ -7,11 +7,16 @@ module instructionmemory (
 
 	///////////MEMORIA DE INSTRUCOES//////////////////////
 	initial begin
+		//Teste de Forwarding
 		memory[0]  <= 32'b00000001000010011000000000100000;			//add $s0 $t0 $t1 // 8 + 4 = 12
 		memory[4]  <= 32'b00000010000010101000100000100010;			//sub $s1 $s0 $t2 // 12 - 10 = 2
 		memory[8]  <= 32'b00000010000100011001000000100000;			//add $s2 $s0 $s1 // 12 + 2 = 14
 		memory[12] <= 32'b10101100000011000000000000000100;			//sw  $t4 4($0) //Guarda 132 na memoria
+
+		//Teste de Stall
 		memory[16] <= 32'b10001100000011010000000000000100;			//lw $t5 4($0)	 //Carrega 132 da memoria
+		memory[20] <= 32'b00000001101010011000000000100000;			//add $s0 $t5 $t1 // 132 + 4 = 136
+
 		// memory[8]  <= 32'b00010001010010110000000000000001;			//beq $t2 $t3 1   // Avança 1 byte (8 bits)
 		// memory[16] <= 32'b00000010000010011000000000100010;			//sub $s0 $s0 $t1 // 12 - 6 = 6  HEX: 6
 		// memory[20] <= 32'b10101100000011000000000000000100;			//sw $t4 4($0) //Guarda 77 na memoria

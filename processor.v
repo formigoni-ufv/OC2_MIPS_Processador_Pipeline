@@ -15,6 +15,7 @@
 `include "sll.v"
 `include "pipelinestages.v"
 `include "forwarding_unit.v"
+`include "hazard_detection_unit.v"
 
 module processor ();
 
@@ -29,6 +30,9 @@ module processor ();
 	wire[31:0] ALUPCPlus4Output; //Saida da ALU PC + 4
 	wire[31:0] instruction; //Instrucao que sai da Instruction Memory
 	//ID STAGE
+	wire       PCWrite;
+	wire       IF_ID_Write;
+	wire       MUX_ID_EX_Write;
 	wire[31:0] readData1; //Dado lido de RS no register file
 	wire[31:0] readData2; //Dado lido de RT no register file
 	wire[31:0] signExtendOutput; //Saida do modulo de extensao do sinal
@@ -49,7 +53,7 @@ module processor ();
 	wire[31:0] memtoRegOutput;
 
 	//Sinais do Controle
-	wire CSignal_RegWrite; //
+	wire CSignal_RegWrite;
 	wire CSignal_RegDst; //Sinal para escolher o registrador destino (RT ou RD)
 	wire CSignal_ALUSrc; //Sinal para escolher entre o valor com sinal extendido ou o valor contido em RT
 	wire CSignal_MemtoReg; //Escolhe se o dado é escrito da memória ou da ALU
@@ -57,6 +61,14 @@ module processor ();
 	wire CSignal_MemWrite; //Habilida escrita na memoria
 	wire CSignal_Branch; //Habilita o Branch
 	wire[1:0] CSignal_ALUOp; //Escolhe a operação da ALU
+	wire CSignal_RegWrite_HazardMUX;
+	wire CSignal_RegDst_HazardMUX;
+	wire CSignal_ALUSrc_HazardMUX;
+	wire CSignal_MemtoReg_HazardMUX;
+	wire CSignal_MemRead_HazardMUX;
+	wire CSignal_MemWrite_HazardMUX;
+	wire CSignal_Branch_HazardMUX;
+	wire[1:0] CSignal_ALUOp_HazardMUX;
 	wire[1:0] CSignal_ForwardingMUX_ALUi0;
 	wire[1:0] CSignal_ForwardingMUX_ALUi1;
 
@@ -110,16 +122,49 @@ module processor ();
 	/******************************Instruction Fetch Stage********************************/
 	multiplexorPCSrc PCSrc(.i0(ALUPCPlus4Output), .i1(PIPE_EXMEM_OUT_BranchALUOutput), .control(branchGateOutput), .out(PCSrcInput));
 
-	programcounter PC(.clock(clk), .in(pcInManual), .out(PCOutput), .reset(resetManual) );
+	programcounter PC(.clock(clk), .PCWrite(PCWrite), .in(pcInManual), .out(PCOutput), .reset(resetManual) );
 
 	instructionmemory InstructionMemory(.addr(PCOutput), .instruction(instruction) );
 
 	arithmeticlogicunit ALUPCPlus4(.A(PCOutput), .B(32'b100), .OP(4'b10), .OUT(ALUPCPlus4Output) );
 
-	PIPE_IF_ID IF_ID(.clk(clk), .PIPEIN_PCPlus4(ALUPCPlus4Output), .PIPEIN_InsMemory(instruction), .PIPEOUT_PCPlus4(PIPE_IFID_ALUPCPlus4Output), .PIPEOUT_InsMemory(PIPE_IFID_Instruction) );
+	PIPE_IF_ID IF_ID(.clk(clk), .IF_ID_Write(IF_ID_Write), .PIPEIN_PCPlus4(ALUPCPlus4Output), .PIPEIN_InsMemory(instruction), .PIPEOUT_PCPlus4(PIPE_IFID_ALUPCPlus4Output), .PIPEOUT_InsMemory(PIPE_IFID_Instruction) );
 
 	/******************************Instruction Decode Stage******************************/
+	hazard_detection_unit hazardUnit(
+		.clk(clk),
+		.ID_EX_MemRead(PIPE_IDEX_OUT_CSignal_MEM_MRead),
+		.ID_EX_RegisterRt(PIPE_IDEX_OUT_RT),
+		.IF_ID_RegisterRs(PIPE_IFID_Instruction[25:21]),
+		.IF_ID_RegisterRt(PIPE_IFID_Instruction[20:16]),
+		.PCWrite(PCWrite),
+		.IF_ID_Write(IF_ID_Write),
+		.MUX_ID_EX_Write(MUX_ID_EX_Write)
+	);
+
 	maincontrolunit ControlUnit(.op(PIPE_IFID_Instruction[31:26]), .regDst(CSignal_RegDst), .ALUSrc(CSignal_ALUSrc), .memtoReg(CSignal_MemtoReg), .regWrite(CSignal_RegWrite), .memRead(CSignal_MemRead), .memWrite(CSignal_MemWrite), .branch(CSignal_Branch), .ALUOp1(CSignal_ALUOp[1]), .ALUOp0(CSignal_ALUOp[0]) );
+
+	controlMUX hazardMUX(
+		.control(MUX_ID_EX_Write),
+		.regDstIn(CSignal_RegDst),
+		.ALUSrcIn(CSignal_ALUSrc),
+		.memtoRegIn(CSignal_MemtoReg),
+		.regWriteIn(CSignal_RegWrite),
+		.memReadIn(CSignal_MemRead),
+		.memWriteIn(CSignal_MemWrite),
+		.branchIn(CSignal_Branch),
+		.ALUOp1In(CSignal_ALUOp[1]),
+		.ALUOp0In(CSignal_ALUOp[0]),
+		.regDstOut(CSignal_RegDst_HazardMUX),
+		.ALUSrcOut(CSignal_ALUSrc_HazardMUX),
+		.memtoRegOut(CSignal_MemtoReg_HazardMUX),
+		.regWriteOut(CSignal_RegWrite_HazardMUX),
+		.memReadOut(CSignal_MemRead_HazardMUX),
+		.memWriteOut(CSignal_MemWrite_HazardMUX),
+		.branchOut(CSignal_Branch_HazardMUX),
+		.ALUOp1Out(CSignal_ALUOp_HazardMUX[1]),
+		.ALUOp0Out(CSignal_ALUOp_HazardMUX[0])
+	);
 
 	registerfile RegisterFile(.clk(clk), .reg1addr(PIPE_IFID_Instruction[25:21]), .reg2addr(PIPE_IFID_Instruction[20:16]), .writeRegister(PIPE_MEMWB_RegDstOutput), .writeData(memtoRegOutput), .regWrite(PIPE_MEMWB_OUT_CSignal_RegWrite), .reg1content(readData1),	.reg2content(readData2) );
 
@@ -138,14 +183,14 @@ module processor ();
 		.PIPEIN_RD(PIPE_IFID_Instruction[15:11]),
 
 		//CONTROL VARS IN
-		.PIPEIN_EX_ALUSrc(CSignal_ALUSrc),
-		.PIPEIN_EX_ALUOp(CSignal_ALUOp),
-		.PIPEIN_EX_RegDst(CSignal_RegDst),
-		.PIPEIN_MEM_Branch(CSignal_Branch),
-		.PIPEIN_MEM_MRead(CSignal_MemRead),
-		.PIPEIN_MEM_MWrite(CSignal_MemWrite),
-		.PIPEIN_WB_RegWrite(CSignal_RegWrite),
-		.PIPEIN_WB_MemtoReg(CSignal_MemtoReg),
+		.PIPEIN_EX_ALUSrc(CSignal_ALUSrc_HazardMUX),
+		.PIPEIN_EX_ALUOp(CSignal_ALUOp_HazardMUX),
+		.PIPEIN_EX_RegDst(CSignal_RegDst_HazardMUX),
+		.PIPEIN_MEM_Branch(CSignal_Branch_HazardMUX),
+		.PIPEIN_MEM_MRead(CSignal_MemRead_HazardMUX),
+		.PIPEIN_MEM_MWrite(CSignal_MemWrite_HazardMUX),
+		.PIPEIN_WB_RegWrite(CSignal_RegWrite_HazardMUX),
+		.PIPEIN_WB_MemtoReg(CSignal_MemtoReg_HazardMUX),
 
 		//DATA VARS OUT
 		.PIPEOUT_PCPlus4(PIPE_IDEX_OUT_ALUPCPlus4Output),
@@ -279,8 +324,11 @@ module processor ();
 		$fwrite(f,"Stage IF:           :         PC + 4       | %b\n", ALUPCPlus4Output);
 		$fwrite(f,"Stage IF:           :       Instruction    | %b\n\n", instruction);
 
-		$fwrite(f,"Stage ID: IF|ID OUT :         PC + 4       | %b\n", PIPE_IFID_ALUPCPlus4Output);
-		$fwrite(f,"Stage ID: IF|ID OUT :       Instruction    | %b\n", PIPE_IFID_Instruction);
+		$fwrite(f,"Stage ID:           :        PC Write      | %b\n", PCWrite);
+		$fwrite(f,"Stage ID:           :       IFID Write     | %b\n", IF_ID_Write);
+		$fwrite(f,"Stage ID:           :        hazardMux OP  | %b\n", MUX_ID_EX_Write);
+		$fwrite(f,"Stage ID:           :         PC + 4       | %b\n", PIPE_IFID_ALUPCPlus4Output);
+		$fwrite(f,"Stage ID:           :       Instruction    | %b\n", PIPE_IFID_Instruction);
 		$fwrite(f,"Stage ID:           :       Read Data 1    | %b\n", readData1);
 		$fwrite(f,"Stage ID:           :       Read Data 2    | %b\n", readData2);
 		$fwrite(f,"Stage ID:           :       Sign Extend    | %b\n", signExtendOutput);
@@ -367,7 +415,10 @@ module processor ();
 	#200 clk = 1;
 	#200 pcInManual = 16;
 	#200 clk = 0;
+	#200 pcInManual = 20;
+	#200 clk = 1;
 	#200 pcInManual = 32'bx;
+	#200 clk = 0;
 	#200 clk = 1;
 	#200 clk = 0;
 	#200 clk = 1;
