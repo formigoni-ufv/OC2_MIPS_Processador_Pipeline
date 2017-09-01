@@ -1,6 +1,6 @@
 //Ruan Evangelista Formigoni - 2661
 //Vitor Guerra Veloso - 2658
-
+`timescale 1ns / 10ps
 `include "alu_control.v"
 `include "andgate.v"
 `include "arithmeticlogicunit.v"
@@ -368,84 +368,125 @@ module processor (
 	/******************************************************************************************************************************************************************************************************/
 
 
+<<<<<<< HEAD
+=======
+	//Aqui os valores são gravados em um arquivo de saida .txt
+	integer f;
+
+	initial begin
+		f = $fopen("output.txt", "w");
+		$fclose(f);
+	end
+
+	always@(clk) begin
+	#50
+		f = $fopen("output.txt","a");
+
+		$fwrite(f,"\n******************************************************************\n");
+		$fwrite(f,"ForwardingUnit      :        ForwardA      | %b\n", CSignal_ForwardingMUX_ALUi0);
+		$fwrite(f,"ForwardingUnit      :        ForwardB      | %b\n\n", CSignal_ForwardingMUX_ALUi1);
+		$fwrite(f,"Clock               :          Clock       | %b\n", clk);
+		$fwrite(f,"Stage IF:           :           PC         | %b\n", PCOutput);
+		$fwrite(f,"Stage IF:           :         PC + 4       | %b\n", ALUPCPlus4Output);
+		$fwrite(f,"Stage IF:           :       Instruction    | %b\n\n", instruction);
+
+		$fwrite(f,"Stage ID:           :        PC Write      | %b\n", PCWrite);
+		$fwrite(f,"Stage ID:           :       IFID Write     | %b\n", IF_ID_Write);
+		$fwrite(f,"Stage ID:           :        hazardMux OP  | %b\n", MUX_ID_EX_Write);
+		$fwrite(f,"Stage ID:           :         PC + 4       | %b\n", PIPE_IFID_ALUPCPlus4Output);
+		$fwrite(f,"Stage ID:           :       Instruction    | %b\n", PIPE_IFID_Instruction);
+		$fwrite(f,"Stage ID:           :       Read Data 1    | %b\n", readData1);
+		$fwrite(f,"Stage ID:           :       Read Data 2    | %b\n", readData2);
+		$fwrite(f,"Stage ID:           :       Sign Extend    | %b\n", signExtendOutput);
+		$fwrite(f,"Stage ID:           :            RS        | %b\n", PIPE_IFID_Instruction[25:21]);
+		$fwrite(f,"Stage ID:           :            RT        | %b\n", PIPE_IFID_Instruction[20:16]);
+		$fwrite(f,"Stage ID:           :            RD        | %b\n", PIPE_IFID_Instruction[15:11]);
+		$fwrite(f,"Stage ID:           :    C_Signal RegDst   | %b\n", CSignal_RegDst);
+		$fwrite(f,"Stage ID:           :    C_Signal ALUSrc   | %b\n", CSignal_ALUSrc);
+		$fwrite(f,"Stage ID:           :    C_Signal MemtoReg | %b\n", CSignal_MemtoReg);
+		$fwrite(f,"Stage ID:           :    C_Signal RegWrite | %b\n", CSignal_RegWrite);
+		$fwrite(f,"Stage ID:           :    C_Signal MemRead  | %b\n", CSignal_MemRead);
+		$fwrite(f,"Stage ID:           :    C_Signal MemWrite | %b\n", CSignal_MemWrite);
+		$fwrite(f,"Stage ID:           :    C_Signal Branch   | %b\n", CSignal_Branch);
+		$fwrite(f,"Stage ID:           :    C_Signal ALUOp    | %b\n\n", CSignal_ALUOp);
+
+		$fwrite(f,"Stage EX:           :         PC + 4       | %b\n", PIPE_IDEX_OUT_ALUPCPlus4Output);
+		$fwrite(f,"Stage EX:           :       ReadData1      | %b\n", PIPE_IDEX_OUT_ReadData1);
+		$fwrite(f,"Stage EX:           :       ReadData2      | %b\n", PIPE_IDEX_OUT_ReadData2);
+		$fwrite(f,"Stage EX:           :       SignExtend     | %b\n", PIPE_IDEX_OUT_SignExt);
+		$fwrite(f,"Stage EX:           :           RS         | %b\n", PIPE_IDEX_OUT_RS);
+		$fwrite(f,"Stage EX:           :           RT         | %b\n", PIPE_IDEX_OUT_RT);
+		$fwrite(f,"Stage EX:           :           RD         | %b\n", PIPE_IDEX_OUT_RD);
+		$fwrite(f,"Stage EX:           :           SLL        | %b\n", sllOutput);
+		$fwrite(f,"Stage EX:           :       Branch ALU     | %b\n", branchALUOutput);
+		$fwrite(f,"Stage EX:           :       MUX ALU Src    | %b\n", ALUSrcOutput);
+		$fwrite(f,"Stage EX:           :     MUX Forward i0   | %b\n", forwardingMUXALUi0);
+		$fwrite(f,"Stage EX:           :     MUX Forward i1   | %b\n", forwardingMUXALUi1);
+		$fwrite(f,"Stage EX:           :       Main ALU       | %b\n", mainALUOutput);
+		$fwrite(f,"Stage EX:           :          Zero        | %b\n", zero);
+		$fwrite(f,"Stage EX:           :  ALU Control Output  | %b\n", ALUControlOutput);
+		$fwrite(f,"Stage EX:           :       MUX RegDst     | %b\n", regDstOutput);
+		$fwrite(f,"Stage EX:           :   C_Signal RegDst    | %b\n", PIPE_IDEX_OUT_CSignal_EX_RegDst);
+		$fwrite(f,"Stage EX:           :   C_Signal ALUSrc    | %b\n", PIPE_IDEX_OUT_CSignal_EX_ALUSrc);
+		$fwrite(f,"Stage EX:           :   C_Signal MemtoReg  | %b\n", PIPE_IDEX_OUT_CSignal_WB_MemtoReg);
+		$fwrite(f,"Stage EX:           :   C_Signal RegWrite  | %b\n", PIPE_IDEX_OUT_CSignal_WB_RegWrite);
+		$fwrite(f,"Stage EX:           :   C_Signal MemRead   | %b\n", PIPE_IDEX_OUT_CSignal_MEM_MRead);
+		$fwrite(f,"Stage EX:           :   C_Signal MemWrite  | %b\n", PIPE_IDEX_OUT_CSignal_MEM_MWrite);
+		$fwrite(f,"Stage EX:           :   C_Signal Branch    | %b\n", PIPE_IDEX_OUT_CSignal_MEM_Branch);
+		$fwrite(f,"Stage EX:           :   C_Signal ALUOp     | %b\n\n", PIPE_IDEX_OUT_CSignal_EX_ALUOp);
+
+		$fwrite(f,"Stage MEM:           :   C_Signal MemtoReg  | %b\n", PIPE_EXMEM_OUT_CSignal_WB_MemtoReg);
+		$fwrite(f,"Stage MEM:           :   C_Signal RegWrite  | %b\n", PIPE_EXMEM_OUT_CSignal_WB_RegWrite);
+		$fwrite(f,"Stage MEM:           :   C_Signal MemRead   | %b\n", PIPE_EXMEM_OUT_CSignal_MEM_MRead);
+		$fwrite(f,"Stage MEM:           :   C_Signal MemWrite  | %b\n", PIPE_EXMEM_OUT_CSignal_MEM_MWrite);
+		$fwrite(f,"Stage MEM:           :   C_Signal Branch    | %b\n", PIPE_EXMEM_OUT_CSignal_MEM_Branch);
+		$fwrite(f,"Stage MEM:           :   BranchALUOutput    | %b\n", PIPE_EXMEM_OUT_BranchALUOutput);
+		$fwrite(f,"Stage MEM:           :   Zero               | %b\n", PIPE_EXMEM_OUT_Zero);
+		$fwrite(f,"Stage MEM:           :   MainALUOutput      | %b\n", PIPE_EXMEM_OUT_MainALUOutput);
+		$fwrite(f,"Stage MEM:           :   ReadData2          | %b\n", PIPE_EXMEM_OUT_ReadData2);
+		$fwrite(f,"Stage MEM:           :   RegDstOutput       | %b\n", PIPE_EXMEM_OUT_RegDstOutput);
+		$fwrite(f,"Stage MEM:           :   Data Memory Output | %b\n", dataMemoryOutput);
+		$fwrite(f,"Stage MEM:           :   Branch Gate Output | %b\n\n", branchGateOutput);
+
+		$fwrite(f,"Stage WB:           :   C_Signal MemtoReg   | %b\n", PIPE_MEMWB_OUT_CSignal_MemtoReg);
+		$fwrite(f,"Stage WB:           :   C_Signal RegWrite   | %b\n", PIPE_MEMWB_OUT_CSignal_RegWrite);
+		$fwrite(f,"Stage WB:           :   Data Memory Output  | %b\n", PIPE_MEMWB_DataMemoryOutput);
+		$fwrite(f,"Stage WB:           :     Main ALU Result   | %b\n", PIPE_MEMWB_MainALUOutput);
+		$fwrite(f,"Stage WB:           :     Reg Dst Output    | %b\n", PIPE_MEMWB_RegDstOutput);
+		$fwrite(f,"Stage WB:           :   Mem to Reg Output   | %b\n\n", memtoRegOutput);
+
+		$fclose(f);
+	end
+
+	//Aqui os dados são transferidos para um arquivo vcd
+	initial begin
+		$dumpfile("Testing_Forwarding.vcd");
+		$dumpvars;
+	end
+
+	//Aqui inicia-se a alteração dos valores do clock
+	initial begin
+	//Inicializando PC com 0
+	resetManual = 0;
+	#100 pcInManual = 0;
+	#200 clk = 1;
+	//Começando a Endereçar as instruções
+	#100 pcInManual = 4;
+	#200 clk = 0;
+	#100 pcInManual = 8;
+	#200 clk = 1;
+	#100 pcInManual = 12;
+	#200 clk = 0;
+	#100 pcInManual = 32'bx;
+	#200 clk = 1;
+	#100
+	#200 clk = 0;
+	#100
+	#200 clk = 1;
+	#100
+	#200 clk = 0;
+	#100
+	#200 clk = 1;
+	end
+>>>>>>> fd5f660d9641c0df8d59bf314dcbb9ca1c57093c
 endmodule
-
-
-
-
-
-
-
-/******************************************************************************************Single Cycle**************************************************************************************************************************/
-//Modules Instantiation
-
-// andgate gate(.i0(branch), .i1(zero), .out(andGateOut) );
-//
-// datamemory datamem(.clk(clk), .addr(aluMainOut), .writeData(reg2content), .memRead(memRead), .memWrite(memWrite), .readData(dataMemOut) );
-//
-// multiplexorMemtoReg dataMemMux(.i0(aluMainOut), .i1(dataMemOut), .control(MemtoReg), .out(memtoRegOut) );
-/****************************************************************************************************************************************************************************************************************/
-
-// $fwrite(f, "\n******************************************************************\n");
-// $fwrite(f, "Clock               :          Clock       | %b\n", clk);
-// $fwrite(f, "Stage IF:           :           PC         | %b\n", PCOutput);
-// $fwrite(f, "Stage IF:           :         PC + 4       | %b\n", ALUPCPlus4Output);
-// $fwrite(f, "Stage IF:           :       Instruction    | %b\n\n", instruction);
-//
-// $display("Stage ID: IF|ID OUT :         PC + 4       | %b", PIPE_IFID_ALUPCPlus4Output);
-// $display("Stage ID: IF|ID OUT :       Instruction    | %b", PIPE_IFID_Instruction);
-// $display("Stage ID:           :       Read Data 1    | %b", readData1);
-// $display("Stage ID:           :       Read Data 2    | %b", readData2);
-// $display("Stage ID:           :       Sign Extend    | %b", signExtendOutput);
-// $display("Stage ID:           :            RT        | %b", PIPE_IFID_Instruction[20:16]);
-// $display("Stage ID:           :            RD        | %b", PIPE_IFID_Instruction[15:11]);
-// $display("Stage ID:           :    C_Signal RegDst   | %b", CSignal_RegDst);
-// $display("Stage ID:           :    C_Signal ALUSrc   | %b", CSignal_ALUSrc);
-// $display("Stage ID:           :    C_Signal MemtoReg | %b", CSignal_MemtoReg);
-// $display("Stage ID:           :    C_Signal RegWrite | %b", CSignal_RegWrite);
-// $display("Stage ID:           :    C_Signal MemRead  | %b", CSignal_MemRead);
-// $display("Stage ID:           :    C_Signal MemWrite | %b", CSignal_MemWrite);
-// $display("Stage ID:           :    C_Signal Branch   | %b", CSignal_Branch);
-// $display("Stage ID:           :    C_Signal ALUOp    | %b\n", CSignal_ALUOp);
-//
-// $display("Stage EX:           :         PC + 4       | %b", PIPE_IDEX_OUT_ALUPCPlus4Output);
-// $display("Stage EX:           :       ReadData1      | %b", PIPE_IDEX_OUT_ReadData1);
-// $display("Stage EX:           :       ReadData2      | %b", PIPE_IDEX_OUT_ReadData2);
-// $display("Stage EX:           :       SignExtend     | %b", PIPE_IDEX_OUT_SignExt);
-// $display("Stage EX:           :           RT         | %b", PIPE_IDEX_OUT_RT);
-// $display("Stage EX:           :           RD         | %b", PIPE_IDEX_OUT_RD);
-// $display("Stage EX:           :           SLL        | %b", sllOutput);
-// $display("Stage EX:           :       Branch ALU     | %b", branchALUOutput);
-// $display("Stage EX:           :       MUX ALU Src    | %b", ALUSrcOutput);
-// $display("Stage EX:           :       Main ALU       | %b", mainALUOutput);
-// $display("Stage EX:           :          Zero        | %b", zero);
-// $display("Stage EX:           :  ALU Control Output  | %b", ALUControlOutput);
-// $display("Stage EX:           :       MUX RegDst     | %b", regDstOutput);
-// $display("Stage EX:           :   C_Signal RegDst    | %b", PIPE_IDEX_OUT_CSignal_EX_RegDst);
-// $display("Stage EX:           :   C_Signal ALUSrc    | %b", PIPE_IDEX_OUT_CSignal_EX_ALUSrc);
-// $display("Stage EX:           :   C_Signal MemtoReg  | %b", PIPE_IDEX_OUT_CSignal_WB_MemtoReg);
-// $display("Stage EX:           :   C_Signal RegWrite  | %b", PIPE_IDEX_OUT_CSignal_WB_RegWrite);
-// $display("Stage EX:           :   C_Signal MemRead   | %b", PIPE_IDEX_OUT_CSignal_MEM_MRead);
-// $display("Stage EX:           :   C_Signal MemWrite  | %b", PIPE_IDEX_OUT_CSignal_MEM_MWrite);
-// $display("Stage EX:           :   C_Signal Branch    | %b", PIPE_IDEX_OUT_CSignal_MEM_Branch);
-// $display("Stage EX:           :   C_Signal ALUOp     | %b\n", PIPE_IDEX_OUT_CSignal_EX_ALUOp);
-//
-// $display("Stage MEM:           :   C_Signal MemtoReg  | %b", PIPE_EXMEM_OUT_CSignal_WB_MemtoReg);
-// $display("Stage MEM:           :   C_Signal RegWrite  | %b", PIPE_EXMEM_OUT_CSignal_WB_RegWrite);
-// $display("Stage MEM:           :   C_Signal MemRead   | %b", PIPE_EXMEM_OUT_CSignal_MEM_MRead);
-// $display("Stage MEM:           :   C_Signal MemWrite  | %b", PIPE_EXMEM_OUT_CSignal_MEM_MWrite);
-// $display("Stage MEM:           :   C_Signal Branch    | %b", PIPE_EXMEM_OUT_CSignal_MEM_Branch);
-// $display("Stage MEM:           :   BranchALUOutput    | %b", PIPE_EXMEM_OUT_BranchALUOutput);
-// $display("Stage MEM:           :   Zero               | %b", PIPE_EXMEM_OUT_Zero);
-// $display("Stage MEM:           :   MainALUOutput      | %b", PIPE_EXMEM_OUT_MainALUOutput);
-// $display("Stage MEM:           :   ReadData2          | %b", PIPE_EXMEM_OUT_ReadData2);
-// $display("Stage MEM:           :   RegDstOutput       | %b", PIPE_EXMEM_OUT_RegDstOutput);
-// $display("Stage MEM:           :   Data Memory Output | %b", dataMemoryOutput);
-// $display("Stage MEM:           :   Branch Gate Output | %b\n", branchGateOutput);
-//
-// $display("Stage WB:           :   C_Signal MemtoReg   | %b", PIPE_MEMWB_OUT_CSignal_MemtoReg);
-// $display("Stage WB:           :   C_Signal RegWrite   | %b", PIPE_MEMWB_OUT_CSignal_RegWrite);
-// $display("Stage WB:           :   Data Memory Output  | %b", PIPE_MEMWB_DataMemoryOutput);
-// $display("Stage WB:           :     Main ALU Result   | %b", PIPE_MEMWB_MainALUOutput);
-// $display("Stage WB:           :     Reg Dst Output    | %b", PIPE_MEMWB_RegDstOutput);
-// $display("Stage WB:           :   Mem to Reg Output   | %b", memtoRegOutput);
