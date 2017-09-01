@@ -82,7 +82,7 @@ module processor (
     output[4:0] PIPE_MEMWB_RegDstOutput,
     output[31:0] memtoRegOutput,
     input clk,
-	input resetManual,
+	//input resetManual,
 	input[31:0] PCSrcInput
 
 );
@@ -186,9 +186,9 @@ module processor (
 	wire[4:0]  PIPE_MEMWB_RegDstOutput;
 
 	/******************************Instruction Fetch Stage********************************/
-	multiplexorPCSrc PCSrc(.i0(ALUPCPlus4Output), .i1(PIPE_EXMEM_OUT_BranchALUOutput), .control(branchGateOutput), .out(PCSrcInput));
+	multiplexorPCSrc PCSrc(.i0(ALUPCPlus4Output), .i1(PIPE_EXMEM_OUT_BranchALUOutput), .control(branchGateOutput) /*, .out(PCSrcInput) */);
 
-	programcounter PC(.clock(clk), .PCWrite(PCWrite), .in(PCSrcInput), .out(PCOutput), .reset(resetManual) );
+	programcounter PC(.clock(clk), .PCWrite(PCWrite), .in(PCSrcInput), .out(PCOutput), .reset(1'b0) );
 
 	instructionmemory InstructionMemory(.addr(PCOutput), .instruction(instruction) );
 

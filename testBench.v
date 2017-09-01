@@ -2,9 +2,7 @@
 
 module testBench();
 	reg clk;
-	reg resetManual; //TODO substituir pelo reset chaveado
-	reg[31:0] PCSrcInput;  //TODO remover pelo PCSrcInput do mux, esta variavel garante dont cares
-	
+	reg[31:0] PCSrcInput;
 	//Testing
 	//Abrindo arquivo de saida
 	integer f;
@@ -137,7 +135,6 @@ module testBench();
         .PIPE_MEMWB_RegDstOutput(PIPE_MEMWB_RegDstOutput),
         .memtoRegOutput(memtoRegOutput),
         .clk(clk),
-        .resetManual(resetManual),
         .PCSrcInput(PCSrcInput)
     );
 	initial begin
@@ -227,7 +224,7 @@ module testBench();
 	//Aqui inicia-se a alteração dos valores do clock
 	initial begin
         //Inicializando PC com 0
-        resetManual = 0;
+        //resetManual = 0;
         #100 PCSrcInput = 0;
         #200 clk = 1;
         //Começando a Endereçar as instruções
