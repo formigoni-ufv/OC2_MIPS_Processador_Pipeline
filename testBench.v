@@ -2,6 +2,8 @@
 
 module testBench();
 	reg clk;
+	reg resetManual;
+	reg pcInManual;
 	
 	//Testing
 	//Abrindo arquivo de saida
@@ -45,13 +47,13 @@ module testBench();
     wire[3:0] ALUControlOutput;
     wire[4:0] regDstOutput;
     wire PIPE_IDEX_OUT_CSignal_EX_RegDst;
-    wire[1:0] PIPE_IDEX_OUT_CSignal_EX_ALUSrc;
+    wire PIPE_IDEX_OUT_CSignal_EX_ALUSrc;
     wire PIPE_IDEX_OUT_CSignal_WB_MemtoReg;
     wire PIPE_IDEX_OUT_CSignal_WB_RegWrite;
     wire PIPE_IDEX_OUT_CSignal_MEM_MRead;
     wire PIPE_IDEX_OUT_CSignal_MEM_MWrite;
     wire PIPE_IDEX_OUT_CSignal_MEM_Branch;
-    wire PIPE_IDEX_OUT_CSignal_EX_ALUOp;
+    wire[1:0] PIPE_IDEX_OUT_CSignal_EX_ALUOp;
     wire PIPE_EXMEM_OUT_CSignal_WB_MemtoReg;
     wire PIPE_EXMEM_OUT_CSignal_WB_RegWrite;
     wire PIPE_EXMEM_OUT_CSignal_MEM_MRead;
@@ -134,10 +136,10 @@ module testBench();
         .PIPE_MEMWB_MainALUOutput(PIPE_MEMWB_MainALUOutput),
         .PIPE_MEMWB_RegDstOutput(PIPE_MEMWB_RegDstOutput),
         .memtoRegOutput(memtoRegOutput)
-    )
+    );
 	initial begin
-        $dumpfile("testbench.vcd")
-        $dumpvars(0,testBench);
+		$dumpfile("testbench.vcd");
+		$dumpvars(0,testBench);
 		f = $fopen("output.txt", "w");
 		$fclose(f);
 	end
@@ -219,9 +221,6 @@ module testBench();
 
 		$fclose(f);
 	end
-    reg resetManual;
-    reg pcInManual;
-    reg clk;
 	initial begin
         //Inicializando PC com 0
         #200 resetManual = 0;
