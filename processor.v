@@ -18,69 +18,69 @@
 `include "hazard_detection_unit.v"
 
 module processor (
-    output[1:0] CSignal_ForwardingMUX_ALUi0;
-    output[1:0] CSignal_ForwardingMUX_ALUi1;
-    output[31:0] PCOutput;
-    output[31:0] ALUPCPlus4Output;
-    output[31:0] instruction;
-    output PCWrite;
-    output IF_ID_Write;
-    output MUX_ID_EX_Write;
-    output[31:0] PIPE_IFID_ALUPCPlus4Output;
-    output[31:0] PIPE_IFID_Instruction;
-    output[31:0] readData1;
-    output[31:0] readData2;
-    output[31:0] signExtendOutput;
-    output CSignal_RegDst;
-    output CSignal_ALUSrc;
-    output CSignal_MemtoReg;
-    output CSignal_RegWrite;
-    output CSignal_MemRead;
-    output CSignal_MemWrite;
-    output CSignal_Branch;
-    output[1:0] CSignal_ALUOp;
-    output[31:0] PIPE_IDEX_OUT_ALUPCPlus4Output;
-    output[31:0] PIPE_IDEX_OUT_ReadData1;
-    output[31:0] PIPE_IDEX_OUT_ReadData2;
-    output[31:0] PIPE_IDEX_OUT_SignExt;
-    output[4:0] PIPE_IDEX_OUT_RS;
-    output[4:0] PIPE_IDEX_OUT_RT;
-    output[4:0] PIPE_IDEX_OUT_RD;
-    output[31:0] sllOutput;
-    output[31:0] branchALUOutput;
-    output[31:0] ALUSrcOutput;
-    output[31:0] forwardingMUXALUi0;
-    output[31:0] forwardingMUXALUi1;
-    output[31:0] mainALUOutput;
-    output zero;
-    output[3:0] ALUControlOutput;
-    output[4:0] regDstOutput;
-    output PIPE_IDEX_OUT_CSignal_EX_RegDst;
-    output[1:0] PIPE_IDEX_OUT_CSignal_EX_ALUSrc;
-    output PIPE_IDEX_OUT_CSignal_WB_MemtoReg;
-    output PIPE_IDEX_OUT_CSignal_WB_RegWrite;
-    output PIPE_IDEX_OUT_CSignal_MEM_MRead;
-    output PIPE_IDEX_OUT_CSignal_MEM_MWrite;
-    output PIPE_IDEX_OUT_CSignal_MEM_Branch;
-    output PIPE_IDEX_OUT_CSignal_EX_ALUOp;
-    output PIPE_EXMEM_OUT_CSignal_WB_MemtoReg;
-    output PIPE_EXMEM_OUT_CSignal_WB_RegWrite;
-    output PIPE_EXMEM_OUT_CSignal_MEM_MRead;
-    output PIPE_EXMEM_OUT_CSignal_MEM_MWrite;
-    output PIPE_EXMEM_OUT_CSignal_MEM_Branch;
-    output[31:0] PIPE_EXMEM_OUT_BranchALUOutput;
-    output PIPE_EXMEM_OUT_Zero;
-    output[31:0] PIPE_EXMEM_OUT_MainALUOutput;
-    output[31:0] PIPE_EXMEM_OUT_ReadData2;
-    output[4:0] PIPE_EXMEM_OUT_RegDstOutput;
-    output[31:0] dataMemoryOutput;
-    output branchGateOutput;
-    output PIPE_MEMWB_OUT_CSignal_MemtoReg;
-    output PIPE_MEMWB_OUT_CSignal_RegWrite;
-    output[31:0] PIPE_MEMWB_DataMemoryOutput;
-    output[31:0] PIPE_MEMWB_MainALUOutput;
-    output[4:0] PIPE_MEMWB_RegDstOutput;
-    output[31:0] memtoRegOutput;
+    output[1:0] CSignal_ForwardingMUX_ALUi0,
+    output[1:0] CSignal_ForwardingMUX_ALUi1,
+    output[31:0] PCOutput,
+    output[31:0] ALUPCPlus4Output,
+    output[31:0] instruction,
+    output PCWrite,
+    output IF_ID_Write,
+    output MUX_ID_EX_Write,
+    output[31:0] PIPE_IFID_ALUPCPlus4Output,
+    output[31:0] PIPE_IFID_Instruction,
+    output[31:0] readData1,
+    output[31:0] readData2,
+    output[31:0] signExtendOutput,
+    output CSignal_RegDst,
+    output CSignal_ALUSrc,
+    output CSignal_MemtoReg,
+    output CSignal_RegWrite,
+    output CSignal_MemRead,
+    output CSignal_MemWrite,
+    output CSignal_Branch,
+    output[1:0] CSignal_ALUOp,
+    output[31:0] PIPE_IDEX_OUT_ALUPCPlus4Output,
+    output[31:0] PIPE_IDEX_OUT_ReadData1,
+    output[31:0] PIPE_IDEX_OUT_ReadData2,
+    output[31:0] PIPE_IDEX_OUT_SignExt,
+    output[4:0] PIPE_IDEX_OUT_RS,
+    output[4:0] PIPE_IDEX_OUT_RT,
+    output[4:0] PIPE_IDEX_OUT_RD,
+    output[31:0] sllOutput,
+    output[31:0] branchALUOutput,
+    output[31:0] ALUSrcOutput,
+    output[31:0] forwardingMUXALUi0,
+    output[31:0] forwardingMUXALUi1,
+    output[31:0] mainALUOutput,
+    output zero,
+    output[3:0] ALUControlOutput,
+    output[4:0] regDstOutput,
+    output PIPE_IDEX_OUT_CSignal_EX_RegDst,
+    output PIPE_IDEX_OUT_CSignal_EX_ALUSrc,
+    output PIPE_IDEX_OUT_CSignal_WB_MemtoReg,
+    output PIPE_IDEX_OUT_CSignal_WB_RegWrite,
+    output PIPE_IDEX_OUT_CSignal_MEM_MRead,
+    output PIPE_IDEX_OUT_CSignal_MEM_MWrite,
+    output PIPE_IDEX_OUT_CSignal_MEM_Branch,
+    output[1:0] PIPE_IDEX_OUT_CSignal_EX_ALUOp,
+    output PIPE_EXMEM_OUT_CSignal_WB_MemtoReg,
+    output PIPE_EXMEM_OUT_CSignal_WB_RegWrite,
+    output PIPE_EXMEM_OUT_CSignal_MEM_MRead,
+    output PIPE_EXMEM_OUT_CSignal_MEM_MWrite,
+    output PIPE_EXMEM_OUT_CSignal_MEM_Branch,
+    output[31:0] PIPE_EXMEM_OUT_BranchALUOutput,
+    output PIPE_EXMEM_OUT_Zero,
+    output[31:0] PIPE_EXMEM_OUT_MainALUOutput,
+    output[31:0] PIPE_EXMEM_OUT_ReadData2,
+    output[4:0] PIPE_EXMEM_OUT_RegDstOutput,
+    output[31:0] dataMemoryOutput,
+    output branchGateOutput,
+    output PIPE_MEMWB_OUT_CSignal_MemtoReg,
+    output PIPE_MEMWB_OUT_CSignal_RegWrite,
+    output[31:0] PIPE_MEMWB_DataMemoryOutput,
+    output[31:0] PIPE_MEMWB_MainALUOutput,
+    output[4:0] PIPE_MEMWB_RegDstOutput,
+    output[31:0] memtoRegOutput
 
 );
 
@@ -368,8 +368,6 @@ module processor (
 	/******************************************************************************************************************************************************************************************************/
 
 
-<<<<<<< HEAD
-=======
 	//Aqui os valores são gravados em um arquivo de saida .txt
 	integer f;
 
@@ -488,5 +486,4 @@ module processor (
 	#100
 	#200 clk = 1;
 	end
->>>>>>> fd5f660d9641c0df8d59bf314dcbb9ca1c57093c
 endmodule
