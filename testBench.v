@@ -136,6 +136,8 @@ module testBench();
         .memtoRegOutput(memtoRegOutput)
     )
 	initial begin
+        $dumpfile("testbench.vcd")
+        $dumpvars(0,testBench);
 		f = $fopen("output.txt", "w");
 		$fclose(f);
 	end
@@ -217,39 +219,39 @@ module testBench();
 
 		$fclose(f);
 	end
-reg resetManual;
-reg pcInManual;
-reg clk;
+    reg resetManual;
+    reg pcInManual;
+    reg clk;
 	initial begin
-	//Inicializando PC com 0
-	#200 resetManual = 0;
-	#200 pcInManual = 0;
-	#200 clk = 1;
-	//Começando a Endereçar as instruções
-	#200 pcInManual = 4;
-	#200 clk = 0;
-	#200 pcInManual = 8;
-	#200 clk = 1;
-	#200 pcInManual = 32'bx;
-	#200 clk = 0;
-	#200 clk = 1;
-	#200 clk = 0;
-	#200 pcInManual = 12;
-	#200 clk = 1;
-	#200 pcInManual = 32'bx;
-	#200 clk = 0;
-	#200 clk = 1;
-	#200 clk = 0;
-	#200 clk = 1;
-	#200 pcInManual = 16;
-	#200 clk = 0;
-	#200 pcInManual = 20;
-	#200 clk = 1;
-	#200 pcInManual = 32'bx;
-	#200 clk = 0;
-	#200 clk = 1;
-	#200 clk = 0;
-	#200 clk = 1;
-	#200 clk = 0;
+        //Inicializando PC com 0
+        #200 resetManual = 0;
+        #200 pcInManual = 0;
+        #200 clk = 1;
+        //Começando a Endereçar as instruções
+        #200 pcInManual = 4;
+        #200 clk = 0;
+        #200 pcInManual = 8;
+        #200 clk = 1;
+        #200 pcInManual = 32'bx;
+        #200 clk = 0;
+        #200 clk = 1;
+        #200 clk = 0;
+        #200 pcInManual = 12;
+        #200 clk = 1;
+        #200 pcInManual = 32'bx;
+        #200 clk = 0;
+        #200 clk = 1;
+        #200 clk = 0;
+        #200 clk = 1;
+        #200 pcInManual = 16;
+        #200 clk = 0;
+        #200 pcInManual = 20;
+        #200 clk = 1;
+        #200 pcInManual = 32'bx;
+        #200 clk = 0;
+        #200 clk = 1;
+        #200 clk = 0;
+        #200 clk = 1;
+        #200 clk = 0;
 	end
 endmodule
