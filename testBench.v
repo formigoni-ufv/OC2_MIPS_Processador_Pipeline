@@ -3,7 +3,7 @@
 module testBench();
 	reg clk;
 	reg resetManual; //TODO substituir pelo reset chaveado
-	reg[31:0] pcInManual;  //TODO remover pelo PCSrcInput do mux, esta variavel garante dont cares
+	reg[31:0] PCSrcInput;  //TODO remover pelo PCSrcInput do mux, esta variavel garante dont cares
 	
 	//Testing
 	//Abrindo arquivo de saida
@@ -138,7 +138,7 @@ module testBench();
         .memtoRegOutput(memtoRegOutput),
         .clk(clk),
         .resetManual(resetManual),
-        .pcInManual(pcInManual)
+        .PCSrcInput(PCSrcInput)
     );
 	initial begin
 		$dumpfile("testbench.vcd");
@@ -228,16 +228,16 @@ module testBench();
 	initial begin
         //Inicializando PC com 0
         resetManual = 0;
-        #100 pcInManual = 0;
+        #100 PCSrcInput = 0;
         #200 clk = 1;
         //Começando a Endereçar as instruções
-        #100 pcInManual = 4;
+        #100 PCSrcInput = 4;
         #200 clk = 0;
-        #100 pcInManual = 8;
+        #100 PCSrcInput = 8;
         #200 clk = 1;
-        #100 pcInManual = 12;
+        #100 PCSrcInput = 12;
         #200 clk = 0;
-        #100 pcInManual = 32'bx;
+        #100 PCSrcInput = 32'bx;
         #200 clk = 1;
         #100
         #200 clk = 0;

@@ -83,7 +83,7 @@ module processor (
     output[31:0] memtoRegOutput,
     input clk,
 	input resetManual,
-	input[31:0] pcInManual
+	input[31:0] PCSrcInput
 
 );
 
@@ -140,7 +140,7 @@ module processor (
 
 	/*****************************************PIPELINED**********************************/
 	wire resetManual; //TODO substituir pelo reset chaveado
-	wire[31:0] pcInManual;  //TODO remover pelo PCSrcInput do mux, esta variavel garante dont cares
+	//wire[31:0] pcInManual;  //TODO remover pelo PCSrcInput do mux, esta variavel garante dont cares
 
 	//Fios de saida da pipeline IF/ID
 	wire[31:0] PIPE_IFID_ALUPCPlus4Output;
@@ -188,7 +188,7 @@ module processor (
 	/******************************Instruction Fetch Stage********************************/
 	multiplexorPCSrc PCSrc(.i0(ALUPCPlus4Output), .i1(PIPE_EXMEM_OUT_BranchALUOutput), .control(branchGateOutput), .out(PCSrcInput));
 
-	programcounter PC(.clock(clk), .PCWrite(PCWrite), .in(pcInManual), .out(PCOutput), .reset(resetManual) );
+	programcounter PC(.clock(clk), .PCWrite(PCWrite), .in(PCSrcInput), .out(PCOutput), .reset(resetManual) );
 
 	instructionmemory InstructionMemory(.addr(PCOutput), .instruction(instruction) );
 
