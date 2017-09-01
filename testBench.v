@@ -135,7 +135,8 @@ module testBench();
         .PIPE_MEMWB_DataMemoryOutput(PIPE_MEMWB_DataMemoryOutput),
         .PIPE_MEMWB_MainALUOutput(PIPE_MEMWB_MainALUOutput),
         .PIPE_MEMWB_RegDstOutput(PIPE_MEMWB_RegDstOutput),
-        .memtoRegOutput(memtoRegOutput)
+        .memtoRegOutput(memtoRegOutput),
+        .clk(clk)
     );
 	initial begin
 		$dumpfile("testbench.vcd");
@@ -221,36 +222,28 @@ module testBench();
 
 		$fclose(f);
 	end
+	//Aqui inicia-se a alteração dos valores do clock
 	initial begin
         //Inicializando PC com 0
-        #200 resetManual = 0;
-        #200 pcInManual = 0;
+        resetManual = 0;
+        #100 pcInManual = 0;
         #200 clk = 1;
         //Começando a Endereçar as instruções
-        #200 pcInManual = 4;
+        #100 pcInManual = 4;
         #200 clk = 0;
-        #200 pcInManual = 8;
+        #100 pcInManual = 8;
         #200 clk = 1;
-        #200 pcInManual = 32'bx;
+        #100 pcInManual = 12;
         #200 clk = 0;
+        #100 pcInManual = 32'bx;
         #200 clk = 1;
+        #100
         #200 clk = 0;
-        #200 pcInManual = 12;
+        #100
         #200 clk = 1;
-        #200 pcInManual = 32'bx;
+        #100
         #200 clk = 0;
+        #100
         #200 clk = 1;
-        #200 clk = 0;
-        #200 clk = 1;
-        #200 pcInManual = 16;
-        #200 clk = 0;
-        #200 pcInManual = 20;
-        #200 clk = 1;
-        #200 pcInManual = 32'bx;
-        #200 clk = 0;
-        #200 clk = 1;
-        #200 clk = 0;
-        #200 clk = 1;
-        #200 clk = 0;
 	end
 endmodule
