@@ -81,7 +81,9 @@ module processor (
     output[31:0] PIPE_MEMWB_MainALUOutput,
     output[4:0] PIPE_MEMWB_RegDstOutput,
     output[31:0] memtoRegOutput,
-    input clk
+    input clk,
+	input resetManual,
+	input[31:0] pcInManual
 
 );
 
@@ -137,8 +139,8 @@ module processor (
 	wire[1:0] CSignal_ForwardingMUX_ALUi1;
 
 	/*****************************************PIPELINED**********************************/
-	reg resetManual; //TODO substituir pelo reset chaveado
-	reg[31:0] pcInManual;  //TODO remover pelo PCSrcInput do mux, esta variavel garante dont cares
+	wire resetManual; //TODO substituir pelo reset chaveado
+	wire[31:0] pcInManual;  //TODO remover pelo PCSrcInput do mux, esta variavel garante dont cares
 
 	//Fios de saida da pipeline IF/ID
 	wire[31:0] PIPE_IFID_ALUPCPlus4Output;

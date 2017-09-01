@@ -2,8 +2,8 @@
 
 module testBench();
 	reg clk;
-	reg resetManual;
-	reg pcInManual;
+	reg resetManual; //TODO substituir pelo reset chaveado
+	reg[31:0] pcInManual;  //TODO remover pelo PCSrcInput do mux, esta variavel garante dont cares
 	
 	//Testing
 	//Abrindo arquivo de saida
@@ -136,7 +136,9 @@ module testBench();
         .PIPE_MEMWB_MainALUOutput(PIPE_MEMWB_MainALUOutput),
         .PIPE_MEMWB_RegDstOutput(PIPE_MEMWB_RegDstOutput),
         .memtoRegOutput(memtoRegOutput),
-        .clk(clk)
+        .clk(clk),
+        .resetManual(resetManual),
+        .pcInManual(pcInManual)
     );
 	initial begin
 		$dumpfile("testbench.vcd");
