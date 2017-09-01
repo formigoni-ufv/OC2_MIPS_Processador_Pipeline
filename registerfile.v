@@ -18,11 +18,7 @@ module registerfile(
 		registers[8] = 8;		//$t0
 		registers[9] = 4;		//$t1
 		registers[10] = 10;	//$t2
-		registers[11] = 5;	//$t3
-		registers[12] = 132;	//$t4
-		registers[13] = 0;	//$t5
-
-		registers[17] = 10;	//$s1
+		registers[11] = 132;	//$t3
 	end
 
 	///////////OUTPUT ASSIGNMENT////////////
