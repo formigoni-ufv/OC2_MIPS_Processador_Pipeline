@@ -17,7 +17,72 @@
 `include "forwarding_unit.v"
 `include "hazard_detection_unit.v"
 
-module processor ();
+module processor (
+    output[1:0] CSignal_ForwardingMUX_ALUi0;
+    output[1:0] CSignal_ForwardingMUX_ALUi1;
+    output[31:0] PCOutput;
+    output[31:0] ALUPCPlus4Output;
+    output[31:0] instruction;
+    output PCWrite;
+    output IF_ID_Write;
+    output MUX_ID_EX_Write;
+    output[31:0] PIPE_IFID_ALUPCPlus4Output;
+    output[31:0] PIPE_IFID_Instruction;
+    output[31:0] readData1;
+    output[31:0] readData2;
+    output[31:0] signExtendOutput;
+    output CSignal_RegDst;
+    output CSignal_ALUSrc;
+    output CSignal_MemtoReg;
+    output CSignal_RegWrite;
+    output CSignal_MemRead;
+    output CSignal_MemWrite;
+    output CSignal_Branch;
+    output[1:0] CSignal_ALUOp;
+    output[31:0] PIPE_IDEX_OUT_ALUPCPlus4Output;
+    output[31:0] PIPE_IDEX_OUT_ReadData1;
+    output[31:0] PIPE_IDEX_OUT_ReadData2;
+    output[31:0] PIPE_IDEX_OUT_SignExt;
+    output[4:0] PIPE_IDEX_OUT_RS;
+    output[4:0] PIPE_IDEX_OUT_RT;
+    output[4:0] PIPE_IDEX_OUT_RD;
+    output[31:0] sllOutput;
+    output[31:0] branchALUOutput;
+    output[31:0] ALUSrcOutput;
+    output[31:0] forwardingMUXALUi0;
+    output[31:0] forwardingMUXALUi1;
+    output[31:0] mainALUOutput;
+    output zero;
+    output[3:0] ALUControlOutput;
+    output[4:0] regDstOutput;
+    output PIPE_IDEX_OUT_CSignal_EX_RegDst;
+    output[1:0] PIPE_IDEX_OUT_CSignal_EX_ALUSrc;
+    output PIPE_IDEX_OUT_CSignal_WB_MemtoReg;
+    output PIPE_IDEX_OUT_CSignal_WB_RegWrite;
+    output PIPE_IDEX_OUT_CSignal_MEM_MRead;
+    output PIPE_IDEX_OUT_CSignal_MEM_MWrite;
+    output PIPE_IDEX_OUT_CSignal_MEM_Branch;
+    output PIPE_IDEX_OUT_CSignal_EX_ALUOp;
+    output PIPE_EXMEM_OUT_CSignal_WB_MemtoReg;
+    output PIPE_EXMEM_OUT_CSignal_WB_RegWrite;
+    output PIPE_EXMEM_OUT_CSignal_MEM_MRead;
+    output PIPE_EXMEM_OUT_CSignal_MEM_MWrite;
+    output PIPE_EXMEM_OUT_CSignal_MEM_Branch;
+    output[31:0] PIPE_EXMEM_OUT_BranchALUOutput;
+    output PIPE_EXMEM_OUT_Zero;
+    output[31:0] PIPE_EXMEM_OUT_MainALUOutput;
+    output[31:0] PIPE_EXMEM_OUT_ReadData2;
+    output[4:0] PIPE_EXMEM_OUT_RegDstOutput;
+    output[31:0] dataMemoryOutput;
+    output branchGateOutput;
+    output PIPE_MEMWB_OUT_CSignal_MemtoReg;
+    output PIPE_MEMWB_OUT_CSignal_RegWrite;
+    output[31:0] PIPE_MEMWB_DataMemoryOutput;
+    output[31:0] PIPE_MEMWB_MainALUOutput;
+    output[4:0] PIPE_MEMWB_RegDstOutput;
+    output[31:0] memtoRegOutput;
+
+);
 
 	reg[31:0] i;
 
@@ -303,127 +368,6 @@ module processor ();
 	/******************************************************************************************************************************************************************************************************/
 
 
-	//Testing
-	//Abrindo arquivo de saida
-	integer f;
-
-	initial begin
-		f = $fopen("output.txt", "w");
-		$fclose(f);
-	end
-
-	always@(clk) begin
-	#50
-		f = $fopen("output.txt","a");
-
-		$fwrite(f,"\n******************************************************************\n");
-		$fwrite(f,"ForwardingUnit      :        ForwardA      | %b\n", CSignal_ForwardingMUX_ALUi0);
-		$fwrite(f,"ForwardingUnit      :        ForwardB      | %b\n\n", CSignal_ForwardingMUX_ALUi1);
-		$fwrite(f,"Clock               :          Clock       | %b\n", clk);
-		$fwrite(f,"Stage IF:           :           PC         | %b\n", PCOutput);
-		$fwrite(f,"Stage IF:           :         PC + 4       | %b\n", ALUPCPlus4Output);
-		$fwrite(f,"Stage IF:           :       Instruction    | %b\n\n", instruction);
-
-		$fwrite(f,"Stage ID:           :        PC Write      | %b\n", PCWrite);
-		$fwrite(f,"Stage ID:           :       IFID Write     | %b\n", IF_ID_Write);
-		$fwrite(f,"Stage ID:           :        hazardMux OP  | %b\n", MUX_ID_EX_Write);
-		$fwrite(f,"Stage ID:           :         PC + 4       | %b\n", PIPE_IFID_ALUPCPlus4Output);
-		$fwrite(f,"Stage ID:           :       Instruction    | %b\n", PIPE_IFID_Instruction);
-		$fwrite(f,"Stage ID:           :       Read Data 1    | %b\n", readData1);
-		$fwrite(f,"Stage ID:           :       Read Data 2    | %b\n", readData2);
-		$fwrite(f,"Stage ID:           :       Sign Extend    | %b\n", signExtendOutput);
-		$fwrite(f,"Stage ID:           :            RS        | %b\n", PIPE_IFID_Instruction[25:21]);
-		$fwrite(f,"Stage ID:           :            RT        | %b\n", PIPE_IFID_Instruction[20:16]);
-		$fwrite(f,"Stage ID:           :            RD        | %b\n", PIPE_IFID_Instruction[15:11]);
-		$fwrite(f,"Stage ID:           :    C_Signal RegDst   | %b\n", CSignal_RegDst);
-		$fwrite(f,"Stage ID:           :    C_Signal ALUSrc   | %b\n", CSignal_ALUSrc);
-		$fwrite(f,"Stage ID:           :    C_Signal MemtoReg | %b\n", CSignal_MemtoReg);
-		$fwrite(f,"Stage ID:           :    C_Signal RegWrite | %b\n", CSignal_RegWrite);
-		$fwrite(f,"Stage ID:           :    C_Signal MemRead  | %b\n", CSignal_MemRead);
-		$fwrite(f,"Stage ID:           :    C_Signal MemWrite | %b\n", CSignal_MemWrite);
-		$fwrite(f,"Stage ID:           :    C_Signal Branch   | %b\n", CSignal_Branch);
-		$fwrite(f,"Stage ID:           :    C_Signal ALUOp    | %b\n\n", CSignal_ALUOp);
-
-		$fwrite(f,"Stage EX:           :         PC + 4       | %b\n", PIPE_IDEX_OUT_ALUPCPlus4Output);
-		$fwrite(f,"Stage EX:           :       ReadData1      | %b\n", PIPE_IDEX_OUT_ReadData1);
-		$fwrite(f,"Stage EX:           :       ReadData2      | %b\n", PIPE_IDEX_OUT_ReadData2);
-		$fwrite(f,"Stage EX:           :       SignExtend     | %b\n", PIPE_IDEX_OUT_SignExt);
-		$fwrite(f,"Stage EX:           :           RS         | %b\n", PIPE_IDEX_OUT_RS);
-		$fwrite(f,"Stage EX:           :           RT         | %b\n", PIPE_IDEX_OUT_RT);
-		$fwrite(f,"Stage EX:           :           RD         | %b\n", PIPE_IDEX_OUT_RD);
-		$fwrite(f,"Stage EX:           :           SLL        | %b\n", sllOutput);
-		$fwrite(f,"Stage EX:           :       Branch ALU     | %b\n", branchALUOutput);
-		$fwrite(f,"Stage EX:           :       MUX ALU Src    | %b\n", ALUSrcOutput);
-		$fwrite(f,"Stage EX:           :     MUX Forward i0   | %b\n", forwardingMUXALUi0);
-		$fwrite(f,"Stage EX:           :     MUX Forward i1   | %b\n", forwardingMUXALUi1);
-		$fwrite(f,"Stage EX:           :       Main ALU       | %b\n", mainALUOutput);
-		$fwrite(f,"Stage EX:           :          Zero        | %b\n", zero);
-		$fwrite(f,"Stage EX:           :  ALU Control Output  | %b\n", ALUControlOutput);
-		$fwrite(f,"Stage EX:           :       MUX RegDst     | %b\n", regDstOutput);
-		$fwrite(f,"Stage EX:           :   C_Signal RegDst    | %b\n", PIPE_IDEX_OUT_CSignal_EX_RegDst);
-		$fwrite(f,"Stage EX:           :   C_Signal ALUSrc    | %b\n", PIPE_IDEX_OUT_CSignal_EX_ALUSrc);
-		$fwrite(f,"Stage EX:           :   C_Signal MemtoReg  | %b\n", PIPE_IDEX_OUT_CSignal_WB_MemtoReg);
-		$fwrite(f,"Stage EX:           :   C_Signal RegWrite  | %b\n", PIPE_IDEX_OUT_CSignal_WB_RegWrite);
-		$fwrite(f,"Stage EX:           :   C_Signal MemRead   | %b\n", PIPE_IDEX_OUT_CSignal_MEM_MRead);
-		$fwrite(f,"Stage EX:           :   C_Signal MemWrite  | %b\n", PIPE_IDEX_OUT_CSignal_MEM_MWrite);
-		$fwrite(f,"Stage EX:           :   C_Signal Branch    | %b\n", PIPE_IDEX_OUT_CSignal_MEM_Branch);
-		$fwrite(f,"Stage EX:           :   C_Signal ALUOp     | %b\n\n", PIPE_IDEX_OUT_CSignal_EX_ALUOp);
-
-		$fwrite(f,"Stage MEM:           :   C_Signal MemtoReg  | %b\n", PIPE_EXMEM_OUT_CSignal_WB_MemtoReg);
-		$fwrite(f,"Stage MEM:           :   C_Signal RegWrite  | %b\n", PIPE_EXMEM_OUT_CSignal_WB_RegWrite);
-		$fwrite(f,"Stage MEM:           :   C_Signal MemRead   | %b\n", PIPE_EXMEM_OUT_CSignal_MEM_MRead);
-		$fwrite(f,"Stage MEM:           :   C_Signal MemWrite  | %b\n", PIPE_EXMEM_OUT_CSignal_MEM_MWrite);
-		$fwrite(f,"Stage MEM:           :   C_Signal Branch    | %b\n", PIPE_EXMEM_OUT_CSignal_MEM_Branch);
-		$fwrite(f,"Stage MEM:           :   BranchALUOutput    | %b\n", PIPE_EXMEM_OUT_BranchALUOutput);
-		$fwrite(f,"Stage MEM:           :   Zero               | %b\n", PIPE_EXMEM_OUT_Zero);
-		$fwrite(f,"Stage MEM:           :   MainALUOutput      | %b\n", PIPE_EXMEM_OUT_MainALUOutput);
-		$fwrite(f,"Stage MEM:           :   ReadData2          | %b\n", PIPE_EXMEM_OUT_ReadData2);
-		$fwrite(f,"Stage MEM:           :   RegDstOutput       | %b\n", PIPE_EXMEM_OUT_RegDstOutput);
-		$fwrite(f,"Stage MEM:           :   Data Memory Output | %b\n", dataMemoryOutput);
-		$fwrite(f,"Stage MEM:           :   Branch Gate Output | %b\n\n", branchGateOutput);
-
-		$fwrite(f,"Stage WB:           :   C_Signal MemtoReg   | %b\n", PIPE_MEMWB_OUT_CSignal_MemtoReg);
-		$fwrite(f,"Stage WB:           :   C_Signal RegWrite   | %b\n", PIPE_MEMWB_OUT_CSignal_RegWrite);
-		$fwrite(f,"Stage WB:           :   Data Memory Output  | %b\n", PIPE_MEMWB_DataMemoryOutput);
-		$fwrite(f,"Stage WB:           :     Main ALU Result   | %b\n", PIPE_MEMWB_MainALUOutput);
-		$fwrite(f,"Stage WB:           :     Reg Dst Output    | %b\n", PIPE_MEMWB_RegDstOutput);
-		$fwrite(f,"Stage WB:           :   Mem to Reg Output   | %b\n\n", memtoRegOutput);
-
-		$fclose(f);
-	end
-
-	initial begin
-	//Inicializando PC com 0
-	#200 resetManual = 0;
-	#200 pcInManual = 0;
-	#200 clk = 1;
-	//Começando a Endereçar as instruções
-	#200 pcInManual = 4;
-	#200 clk = 0;
-	#200 pcInManual = 8;
-	#200 clk = 1;
-	#200 pcInManual = 32'bx;
-	#200 clk = 0;
-	#200 clk = 1;
-	#200 clk = 0;
-	#200 pcInManual = 12;
-	#200 clk = 1;
-	#200 pcInManual = 32'bx;
-	#200 clk = 0;
-	#200 clk = 1;
-	#200 clk = 0;
-	#200 clk = 1;
-	#200 pcInManual = 16;
-	#200 clk = 0;
-	#200 pcInManual = 20;
-	#200 clk = 1;
-	#200 pcInManual = 32'bx;
-	#200 clk = 0;
-	#200 clk = 1;
-	#200 clk = 0;
-	#200 clk = 1;
-	#200 clk = 0;
-	end
 endmodule
 
 
