@@ -1,18 +1,109 @@
 //Ruan Evangelista Formigoni - 2661
-//Victor Guerra Veloso - 2658
-
+//Vitor Guerra Veloso - 2658
+`timescale 1ns / 10ps
+`include "alu_control.v"
+`include "andgate.v"
+`include "arithmeticlogicunit.v"
+`include "datamemory.v"
+`include "decoder.v"
+`include "instructionmemory.v"
+`include "maincontrolunit.v"
+`include "multiplexor.v"
+`include "programcounter.v"
+`include "registerfile.v"
+`include "signext.v"
+`include "sll.v"
+`include "pipelinestages.v"
+`include "forwarding_unit.v"
+`include "hazard_detection_unit.v"
 
 module processor (
-	input wire clkgenerator,
-	input wire pushbutton0,
-	input wire sw9, sw8, sw7, sw6, sw5, sw4, sw3, sw2, sw1, sw0,
-	output reg led0, led1, led2, led3, led4, led5, led6, led7, led8, led9,
-	output wire[6:0] DISPLAY0, DISPLAY1, DISPLAY2, DISPLAY3, DISPLAY4, DISPLAY5
-	);
+	input clk,
+	//Variaveis do Estagio IF
+	output PCWrite,
+	input[31:0] PCSrcInput,
+	output[31:0] PCOutput,
+	output[31:0] instruction,
+	output[31:0] ALUPCPlus4Output,
+
+	//Variaveis do PIPE IF/ID
+	output IF_ID_Write,
+	output[31:0] PIPE_IFID_ALUPCPlus4Output,
+	output[31:0] PIPE_IFID_Instruction,
+
+	//Variaveis do Estagio ID
+	output CSignal_RegDst,
+	output CSignal_ALUSrc,
+	output CSignal_MemtoReg,
+	output CSignal_RegWrite,
+	output CSignal_MemRead,
+	output CSignal_MemWrite,
+	output CSignal_Branch,
+	output[1:0] CSignal_ALUOp,
+	output MUX_ID_EX_Write,
+	output[31:0] readData1,
+	output[31:0] readData2,
+	output[31:0] signExtendOutput,
+
+	//Variaveis do Pipe ID/EX
+	output PIPE_IDEX_OUT_CSignal_EX_RegDst,
+	output PIPE_IDEX_OUT_CSignal_EX_ALUSrc,
+	output PIPE_IDEX_OUT_CSignal_WB_MemtoReg,
+	output PIPE_IDEX_OUT_CSignal_WB_RegWrite,
+	output PIPE_IDEX_OUT_CSignal_MEM_MRead,
+	output PIPE_IDEX_OUT_CSignal_MEM_MWrite,
+	output PIPE_IDEX_OUT_CSignal_MEM_Branch,
+	output[1:0] PIPE_IDEX_OUT_CSignal_EX_ALUOp,
+	output[31:0] PIPE_IDEX_OUT_ALUPCPlus4Output,
+	output[31:0] PIPE_IDEX_OUT_ReadData1,
+	output[31:0] PIPE_IDEX_OUT_ReadData2,
+	output[31:0] PIPE_IDEX_OUT_SignExt,
+	output[4:0] PIPE_IDEX_OUT_RS,
+	output[4:0] PIPE_IDEX_OUT_RT,
+	output[4:0] PIPE_IDEX_OUT_RD,
+
+	//Variaveis do Estagio EX
+	output[1:0] CSignal_ForwardingMUX_ALUi0,
+	output[1:0] CSignal_ForwardingMUX_ALUi1,
+	output[31:0] sllOutput,
+	output[31:0] branchALUOutput,
+	output[31:0] ALUSrcOutput,
+	output[31:0] forwardingMUXALUi0,
+	output[31:0] forwardingMUXALUi1,
+	output[31:0] mainALUOutput,
+	output zero,
+	output[3:0] ALUControlOutput,
+	output[4:0] regDstOutput,
+
+	//Variaveis do Pipe EX/MEM
+	output PIPE_EXMEM_OUT_CSignal_WB_MemtoReg,
+	output PIPE_EXMEM_OUT_CSignal_WB_RegWrite,
+	output PIPE_EXMEM_OUT_CSignal_MEM_MRead,
+	output PIPE_EXMEM_OUT_CSignal_MEM_MWrite,
+	output PIPE_EXMEM_OUT_CSignal_MEM_Branch,
+	output[31:0] PIPE_EXMEM_OUT_BranchALUOutput,
+	output PIPE_EXMEM_OUT_Zero,
+	output[31:0] PIPE_EXMEM_OUT_MainALUOutput,
+	output[31:0] PIPE_EXMEM_OUT_ReadData2,
+	output[4:0] PIPE_EXMEM_OUT_RegDstOutput,
+
+	//Variaveis do Estagio MEM
+	output[31:0] dataMemoryOutput,
+	output branchGateOutput,
+
+	//Variaveis do Pipe MEM/WB
+	output PIPE_MEMWB_OUT_CSignal_MemtoReg,
+	output PIPE_MEMWB_OUT_CSignal_RegWrite,
+	output[31:0] PIPE_MEMWB_DataMemoryOutput,
+	output[31:0] PIPE_MEMWB_MainALUOutput,
+	output[4:0] PIPE_MEMWB_RegDstOutput,
+
+	//Variaveis do Estagio WB
+	output[31:0] memtoRegOutput
+);
 
 	reg[31:0] i;
-	reg clk;
-	
+
 	//Fios da saída ou entrada de módulos, não pipelines
 	//IF STAGE
 	wire[31:0] PCSrcInput; //Proximo endereco do PC
@@ -63,6 +154,9 @@ module processor (
 	wire[1:0] CSignal_ForwardingMUX_ALUi1;
 
 	/*****************************************PIPELINED**********************************/
+	wire resetManual; //TODO substituir pelo reset chaveado
+	//wire[31:0] pcInManual;  //TODO remover pelo PCSrcInput do mux, esta variavel garante dont cares
+
 	//Fios de saida da pipeline IF/ID
 	wire[31:0] PIPE_IFID_ALUPCPlus4Output;
 	wire[31:0] PIPE_IFID_Instruction;
@@ -106,11 +200,10 @@ module processor (
 	wire[31:0] PIPE_MEMWB_MainALUOutput;
 	wire[4:0]  PIPE_MEMWB_RegDstOutput;
 
-	
 	/******************************Instruction Fetch Stage********************************/
-	multiplexorPCSrc PCSrc(.i0(ALUPCPlus4Output), .i1(PIPE_EXMEM_OUT_BranchALUOutput), .control(1'b0), .out(PCSrcInput));
+	multiplexorPCSrc PCSrc(.i0(ALUPCPlus4Output), .i1(PIPE_EXMEM_OUT_BranchALUOutput), .control(branchGateOutput) /*, .out(PCSrcInput) */);
 
-	programcounter PC(.clock(clk), .PCWrite(PCWrite), .in(PCSrcInput), .out(PCOutput), .reset(sw9) );
+	programcounter PC(.clock(clk), .PCWrite(PCWrite), .in(PCSrcInput), .out(PCOutput), .reset(1'b0) );
 
 	instructionmemory InstructionMemory(.addr(PCOutput), .instruction(instruction) );
 
@@ -290,98 +383,6 @@ module processor (
 
 	/******************************************************************************************************************************************************************************************************/
 
-	
-	/*******************************FPGA******************************/
 
-/***********CLOCK***************/
-	always@(posedge clkgenerator)begin
-		i = i+1;
-		if(i == 25000000)begin
-			clk = 1;
-		end
-		else if(i == 50000000)begin
-			clk = 0;
-			i=0;
-		end
-	end
-	
-/********FPGA I/O *******/
-	reg [3:0] displaysIn[5:0];
-	
-	 decoder display0(
-	 	.in(displaysIn[0]),
-	 	.out(DISPLAY0)
-	 );
-	
-	 decoder display1(
-	 	.in(displaysIn[1]),
-	 	.out(DISPLAY1)
-	 );
-	
-	 decoder display2(
-	 	.in(displaysIn[2]),
-	 	.out(DISPLAY2)
-	 );
-	
-	 decoder display3(
-	 	.in(displaysIn[3]),
-	 	.out(DISPLAY3)
-	 );
-	
-	
-	 decoder display4(
-	 	.in(displaysIn[4]),
-	 	.out(DISPLAY4)
-	 );
-	
-	
-	 decoder display5(
-	 	.in(displaysIn[5]),
-	 	.out(DISPLAY5)
-	 );
-	
-	
-	//LEDS
-	always@(sw9, sw8, sw8, sw7, sw6, sw5, sw4, sw3, sw2, sw1, sw0, clk)begin
-		if(sw9)   led9 = 1; else led9 = 0;
-		if(sw8)   led8 = 1; else led8 = 0;
-		if(sw7)   led7 = 1; else led7 = 0;
-		if(sw6)   led6 = 1; else led6 = 0;
-		if(sw5)   led5 = 1; else led5 = 0;
-		if(sw4)   led4 = 1; else led4 = 0;
-		if(sw3)   led3 = 1; else led3 = 0;
-		if(sw2)   led2 = 1; else led2 = 0;
-		if(sw1)   led1 = 1; else led1 = 0;
-		if(sw0)   led0 = 1; else led0 = 0;
-	end
-	
-	//SWITCHES
-	always@(sw8, sw7, sw6, sw5, sw4, sw3, sw2, sw1, sw0)begin
-		if(sw0 == 1)begin
-			displaysIn[0] <= PCOutput[3:0];
-			displaysIn[1] <= PCOutput[7:4];
-			displaysIn[2] <= PCOutput[11:8];
-			displaysIn[3] <= PCOutput[15:12];
-			displaysIn[4] <= PCOutput[19:16];
-			displaysIn[5] <= PCOutput[23:20];
-		end
-		else if(sw1 == 1) begin
-			displaysIn[0] <= ALUPCPlus4Output[3:0];
-			displaysIn[1] <= ALUPCPlus4Output[7:4];
-			displaysIn[2] <= ALUPCPlus4Output[11:8];
-			displaysIn[3] <= ALUPCPlus4Output[15:12];
-			displaysIn[4] <= ALUPCPlus4Output[19:16];
-			displaysIn[5] <= ALUPCPlus4Output[23:20];
-		end
-		else begin
-			displaysIn[0] <= clk;
-			displaysIn[1] <= 0;
-			displaysIn[2] <= 0;
-			displaysIn[3] <= 0;
-			displaysIn[4] <= 0;
-			displaysIn[5] <= 0;
-		end
-
-	end
 
 endmodule

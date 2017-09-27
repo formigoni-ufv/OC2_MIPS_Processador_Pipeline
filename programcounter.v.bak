@@ -6,7 +6,7 @@ module programcounter(
 	output reg[31:0] out
 );
 
-	always@(clock)begin
+	always@(clock, PCWrite)begin
 		if(PCWrite == 1)begin
 			if(reset == 0)begin
 				out <= in;

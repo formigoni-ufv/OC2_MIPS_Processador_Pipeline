@@ -1,0 +1,718 @@
+Analysis & Synthesis report for Pipelined_MIPS
+Tue Sep 26 21:43:49 2017
+Quartus Prime Version 16.1.0 Build 196 10/24/2016 SJ Lite Edition
+
+
+---------------------
+; Table of Contents ;
+---------------------
+  1. Legal Notice
+  2. Analysis & Synthesis Summary
+  3. Analysis & Synthesis Settings
+  4. Parallel Compilation
+  5. Analysis & Synthesis Source Files Read
+  6. Analysis & Synthesis Resource Usage Summary
+  7. Analysis & Synthesis Resource Utilization by Entity
+  8. Logic Cells Representing Combinational Loops
+  9. General Register Statistics
+ 10. Multiplexer Restructuring Statistics (Restructuring Performed)
+ 11. Port Connectivity Checks: "andgate:gate"
+ 12. Port Connectivity Checks: "arithmeticlogicunit:branchALU"
+ 13. Port Connectivity Checks: "arithmeticlogicunit:ALUPCPlus4"
+ 14. Port Connectivity Checks: "multiplexorPCSrc:PCSrc"
+ 15. Post-Synthesis Netlist Statistics for Top Partition
+ 16. Elapsed Time Per Partition
+ 17. Analysis & Synthesis Messages
+ 18. Analysis & Synthesis Suppressed Messages
+
+
+
+----------------
+; Legal Notice ;
+----------------
+Copyright (C) 2016  Intel Corporation. All rights reserved.
+Your use of Intel Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Intel Program License 
+Subscription Agreement, the Intel Quartus Prime License Agreement,
+the Intel MegaCore Function License Agreement, or other 
+applicable license agreement, including, without limitation, 
+that your use is for the sole purpose of programming logic 
+devices manufactured by Intel and sold by Intel or its 
+authorized distributors.  Please refer to the applicable 
+agreement for further details.
+
+
+
++----------------------------------------------------------------------------------+
+; Analysis & Synthesis Summary                                                     ;
++------------------------------------+---------------------------------------------+
+; Analysis & Synthesis Status        ; Successful - Tue Sep 26 21:43:49 2017       ;
+; Quartus Prime Version              ; 16.1.0 Build 196 10/24/2016 SJ Lite Edition ;
+; Revision Name                      ; Pipelined_MIPS                              ;
+; Top-level Entity Name              ; processor                                   ;
+; Family                             ; MAX 10                                      ;
+; Total logic elements               ; 146                                         ;
+;     Total combinational functions  ; 146                                         ;
+;     Dedicated logic registers      ; 33                                          ;
+; Total registers                    ; 33                                          ;
+; Total pins                         ; 64                                          ;
+; Total virtual pins                 ; 0                                           ;
+; Total memory bits                  ; 0                                           ;
+; Embedded Multiplier 9-bit elements ; 0                                           ;
+; Total PLLs                         ; 0                                           ;
+; UFM blocks                         ; 0                                           ;
+; ADC blocks                         ; 0                                           ;
++------------------------------------+---------------------------------------------+
+
+
++----------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Settings                                                                                        ;
++----------------------------------------------------------------------------+--------------------+--------------------+
+; Option                                                                     ; Setting            ; Default Value      ;
++----------------------------------------------------------------------------+--------------------+--------------------+
+; Device                                                                     ; 10M50DAF484C7G     ;                    ;
+; Top-level entity name                                                      ; processor          ; Pipelined_MIPS     ;
+; Family name                                                                ; MAX 10             ; Cyclone V          ;
+; Use smart compilation                                                      ; Off                ; Off                ;
+; Enable parallel Assembler and TimeQuest Timing Analyzer during compilation ; On                 ; On                 ;
+; Enable compact report table                                                ; Off                ; Off                ;
+; Restructure Multiplexers                                                   ; Auto               ; Auto               ;
+; Create Debugging Nodes for IP Cores                                        ; Off                ; Off                ;
+; Preserve fewer node names                                                  ; On                 ; On                 ;
+; OpenCore Plus hardware evaluation                                          ; Enable             ; Enable             ;
+; Verilog Version                                                            ; Verilog_2001       ; Verilog_2001       ;
+; VHDL Version                                                               ; VHDL_1993          ; VHDL_1993          ;
+; State Machine Processing                                                   ; Auto               ; Auto               ;
+; Safe State Machine                                                         ; Off                ; Off                ;
+; Extract Verilog State Machines                                             ; On                 ; On                 ;
+; Extract VHDL State Machines                                                ; On                 ; On                 ;
+; Ignore Verilog initial constructs                                          ; Off                ; Off                ;
+; Iteration limit for constant Verilog loops                                 ; 5000               ; 5000               ;
+; Iteration limit for non-constant Verilog loops                             ; 250                ; 250                ;
+; Add Pass-Through Logic to Inferred RAMs                                    ; On                 ; On                 ;
+; Infer RAMs from Raw Logic                                                  ; On                 ; On                 ;
+; Parallel Synthesis                                                         ; On                 ; On                 ;
+; DSP Block Balancing                                                        ; Auto               ; Auto               ;
+; NOT Gate Push-Back                                                         ; On                 ; On                 ;
+; Power-Up Don't Care                                                        ; On                 ; On                 ;
+; Remove Redundant Logic Cells                                               ; Off                ; Off                ;
+; Remove Duplicate Registers                                                 ; On                 ; On                 ;
+; Ignore CARRY Buffers                                                       ; Off                ; Off                ;
+; Ignore CASCADE Buffers                                                     ; Off                ; Off                ;
+; Ignore GLOBAL Buffers                                                      ; Off                ; Off                ;
+; Ignore ROW GLOBAL Buffers                                                  ; Off                ; Off                ;
+; Ignore LCELL Buffers                                                       ; Off                ; Off                ;
+; Ignore SOFT Buffers                                                        ; On                 ; On                 ;
+; Limit AHDL Integers to 32 Bits                                             ; Off                ; Off                ;
+; Optimization Technique                                                     ; Balanced           ; Balanced           ;
+; Carry Chain Length                                                         ; 70                 ; 70                 ;
+; Auto Carry Chains                                                          ; On                 ; On                 ;
+; Auto Open-Drain Pins                                                       ; On                 ; On                 ;
+; Perform WYSIWYG Primitive Resynthesis                                      ; Off                ; Off                ;
+; Auto ROM Replacement                                                       ; On                 ; On                 ;
+; Auto RAM Replacement                                                       ; On                 ; On                 ;
+; Auto DSP Block Replacement                                                 ; On                 ; On                 ;
+; Auto Shift Register Replacement                                            ; Auto               ; Auto               ;
+; Allow Shift Register Merging across Hierarchies                            ; Auto               ; Auto               ;
+; Auto Clock Enable Replacement                                              ; On                 ; On                 ;
+; Strict RAM Replacement                                                     ; Off                ; Off                ;
+; Allow Synchronous Control Signals                                          ; On                 ; On                 ;
+; Force Use of Synchronous Clear Signals                                     ; Off                ; Off                ;
+; Auto RAM Block Balancing                                                   ; On                 ; On                 ;
+; Auto RAM to Logic Cell Conversion                                          ; Off                ; Off                ;
+; Auto Resource Sharing                                                      ; Off                ; Off                ;
+; Allow Any RAM Size For Recognition                                         ; Off                ; Off                ;
+; Allow Any ROM Size For Recognition                                         ; Off                ; Off                ;
+; Allow Any Shift Register Size For Recognition                              ; Off                ; Off                ;
+; Use LogicLock Constraints during Resource Balancing                        ; On                 ; On                 ;
+; Ignore translate_off and synthesis_off directives                          ; Off                ; Off                ;
+; Timing-Driven Synthesis                                                    ; On                 ; On                 ;
+; Report Parameter Settings                                                  ; On                 ; On                 ;
+; Report Source Assignments                                                  ; On                 ; On                 ;
+; Report Connectivity Checks                                                 ; On                 ; On                 ;
+; Ignore Maximum Fan-Out Assignments                                         ; Off                ; Off                ;
+; Synchronization Register Chain Length                                      ; 2                  ; 2                  ;
+; PowerPlay Power Optimization During Synthesis                              ; Normal compilation ; Normal compilation ;
+; HDL message level                                                          ; Level2             ; Level2             ;
+; Suppress Register Optimization Related Messages                            ; Off                ; Off                ;
+; Number of Removed Registers Reported in Synthesis Report                   ; 5000               ; 5000               ;
+; Number of Swept Nodes Reported in Synthesis Report                         ; 5000               ; 5000               ;
+; Number of Inverted Registers Reported in Synthesis Report                  ; 100                ; 100                ;
+; Clock MUX Protection                                                       ; On                 ; On                 ;
+; Auto Gated Clock Conversion                                                ; Off                ; Off                ;
+; Block Design Naming                                                        ; Auto               ; Auto               ;
+; SDC constraint protection                                                  ; Off                ; Off                ;
+; Synthesis Effort                                                           ; Auto               ; Auto               ;
+; Shift Register Replacement - Allow Asynchronous Clear Signal               ; On                 ; On                 ;
+; Pre-Mapping Resynthesis Optimization                                       ; Off                ; Off                ;
+; Analysis & Synthesis Message Level                                         ; Medium             ; Medium             ;
+; Disable Register Merging Across Hierarchies                                ; Auto               ; Auto               ;
+; Resource Aware Inference For Block RAM                                     ; On                 ; On                 ;
++----------------------------------------------------------------------------+--------------------+--------------------+
+
+
++------------------------------------------+
+; Parallel Compilation                     ;
++----------------------------+-------------+
+; Processors                 ; Number      ;
++----------------------------+-------------+
+; Number detected on machine ; 4           ;
+; Maximum allowed            ; 2           ;
+;                            ;             ;
+; Average used               ; 1.00        ;
+; Maximum used               ; 2           ;
+;                            ;             ;
+; Usage by Processor         ; % Time Used ;
+;     Processor 1            ; 100.0%      ;
+;     Processor 2            ;   0.0%      ;
++----------------------------+-------------+
+
+
++------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Source Files Read                                                                                                                                                                     ;
++----------------------------------+-----------------+------------------------+--------------------------------------------------------------------------------------------------------------------+---------+
+; File Name with User-Entered Path ; Used in Netlist ; File Type              ; File Name with Absolute Path                                                                                       ; Library ;
++----------------------------------+-----------------+------------------------+--------------------------------------------------------------------------------------------------------------------+---------+
+; sll.v                            ; yes             ; User Verilog HDL File  ; D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/sll.v                   ;         ;
+; signext.v                        ; yes             ; User Verilog HDL File  ; D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/signext.v               ;         ;
+; registerfile.v                   ; yes             ; User Verilog HDL File  ; D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/registerfile.v          ;         ;
+; programcounter.v                 ; yes             ; User Verilog HDL File  ; D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v        ;         ;
+; processor.v                      ; yes             ; User Verilog HDL File  ; D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v             ;         ;
+; pipelinestages.v                 ; yes             ; User Verilog HDL File  ; D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v        ;         ;
+; multiplexor.v                    ; yes             ; User Verilog HDL File  ; D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/multiplexor.v           ;         ;
+; maincontrolunit.v                ; yes             ; User Verilog HDL File  ; D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/maincontrolunit.v       ;         ;
+; instructionmemory.v              ; yes             ; User Verilog HDL File  ; D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/instructionmemory.v     ;         ;
+; hazard_detection_unit.v          ; yes             ; User Verilog HDL File  ; D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/hazard_detection_unit.v ;         ;
+; forwarding_unit.v                ; yes             ; User Verilog HDL File  ; D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v       ;         ;
+; decoder.v                        ; yes             ; User Verilog HDL File  ; D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/decoder.v               ;         ;
+; datamemory.v                     ; yes             ; User Verilog HDL File  ; D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/datamemory.v            ;         ;
+; arithmeticlogicunit.v            ; yes             ; User Verilog HDL File  ; D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/arithmeticlogicunit.v   ;         ;
+; andgate.v                        ; yes             ; User Verilog HDL File  ; D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/andgate.v               ;         ;
+; alu_control.v                    ; yes             ; User Verilog HDL File  ; D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/alu_control.v           ;         ;
++----------------------------------+-----------------+------------------------+--------------------------------------------------------------------------------------------------------------------+---------+
+
+
++---------------------------------------------------------+
+; Analysis & Synthesis Resource Usage Summary             ;
++---------------------------------------------+-----------+
+; Resource                                    ; Usage     ;
++---------------------------------------------+-----------+
+; Estimated Total logic elements              ; 146       ;
+;                                             ;           ;
+; Total combinational functions               ; 146       ;
+; Logic element usage by number of LUT inputs ;           ;
+;     -- 4 input functions                    ; 83        ;
+;     -- 3 input functions                    ; 30        ;
+;     -- <=2 input functions                  ; 33        ;
+;                                             ;           ;
+; Logic elements by mode                      ;           ;
+;     -- normal mode                          ; 94        ;
+;     -- arithmetic mode                      ; 52        ;
+;                                             ;           ;
+; Total registers                             ; 33        ;
+;     -- Dedicated logic registers            ; 33        ;
+;     -- I/O registers                        ; 0         ;
+;                                             ;           ;
+; I/O pins                                    ; 64        ;
+;                                             ;           ;
+; Embedded Multiplier 9-bit elements          ; 0         ;
+;                                             ;           ;
+; Maximum fan-out node                        ; sw9~input ;
+; Maximum fan-out                             ; 44        ;
+; Total fan-out                               ; 669       ;
+; Average fan-out                             ; 2.18      ;
++---------------------------------------------+-----------+
+
+
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+; Analysis & Synthesis Resource Utilization by Entity                                                                                                                                                                                                                       ;
++-------------------------------------+---------------------+---------------------------+-------------+------------+--------------+---------+-----------+------+--------------+------------+-------------------------------------------+---------------------+--------------+
+; Compilation Hierarchy Node          ; Combinational ALUTs ; Dedicated Logic Registers ; Memory Bits ; UFM Blocks ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; ADC blocks ; Full Hierarchy Name                       ; Entity Name         ; Library Name ;
++-------------------------------------+---------------------+---------------------------+-------------+------------+--------------+---------+-----------+------+--------------+------------+-------------------------------------------+---------------------+--------------+
+; |processor                          ; 146 (82)            ; 33 (33)                   ; 0           ; 0          ; 0            ; 0       ; 0         ; 64   ; 0            ; 0          ; |processor                                ; processor           ; work         ;
+;    |arithmeticlogicunit:ALUPCPlus4| ; 22 (22)             ; 0 (0)                     ; 0           ; 0          ; 0            ; 0       ; 0         ; 0    ; 0            ; 0          ; |processor|arithmeticlogicunit:ALUPCPlus4 ; arithmeticlogicunit ; work         ;
+;    |decoder:display0|               ; 7 (7)               ; 0 (0)                     ; 0           ; 0          ; 0            ; 0       ; 0         ; 0    ; 0            ; 0          ; |processor|decoder:display0               ; decoder             ; work         ;
+;    |decoder:display1|               ; 7 (7)               ; 0 (0)                     ; 0           ; 0          ; 0            ; 0       ; 0         ; 0    ; 0            ; 0          ; |processor|decoder:display1               ; decoder             ; work         ;
+;    |decoder:display2|               ; 7 (7)               ; 0 (0)                     ; 0           ; 0          ; 0            ; 0       ; 0         ; 0    ; 0            ; 0          ; |processor|decoder:display2               ; decoder             ; work         ;
+;    |decoder:display3|               ; 7 (7)               ; 0 (0)                     ; 0           ; 0          ; 0            ; 0       ; 0         ; 0    ; 0            ; 0          ; |processor|decoder:display3               ; decoder             ; work         ;
+;    |decoder:display4|               ; 7 (7)               ; 0 (0)                     ; 0           ; 0          ; 0            ; 0       ; 0         ; 0    ; 0            ; 0          ; |processor|decoder:display4               ; decoder             ; work         ;
+;    |decoder:display5|               ; 7 (7)               ; 0 (0)                     ; 0           ; 0          ; 0            ; 0       ; 0         ; 0    ; 0            ; 0          ; |processor|decoder:display5               ; decoder             ; work         ;
++-------------------------------------+---------------------+---------------------------+-------------+------------+--------------+---------+-----------+------+--------------+------------+-------------------------------------------+---------------------+--------------+
+Note: For table entries with two numbers listed, the numbers in parentheses indicate the number of resources of the given type used by the specific entity alone. The numbers listed outside of parentheses indicate the total resources of the given type used by the specific entity and all of its sub-entities in the hierarchy.
+
+
++-------------------------------------------------------------+
+; Logic Cells Representing Combinational Loops                ;
++--------------------------------------------------------+----+
+; Logic Cell Name                                        ;    ;
++--------------------------------------------------------+----+
+; arithmeticlogicunit:ALUPCPlus4|Add0~29                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~28                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~27                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~26                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~25                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~24                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~23                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~22                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~21                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~20                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~19                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~18                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~17                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~16                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~15                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~14                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~13                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~12                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~11                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~10                 ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~9                  ;    ;
+; arithmeticlogicunit:ALUPCPlus4|Add0~8                  ;    ;
+; Number of logic cells representing combinational loops ; 22 ;
++--------------------------------------------------------+----+
+Note: All cells listed above may not be present at the end of synthesis due to various synthesis optimizations.
+
+
++------------------------------------------------------+
+; General Register Statistics                          ;
++----------------------------------------------+-------+
+; Statistic                                    ; Value ;
++----------------------------------------------+-------+
+; Total registers                              ; 33    ;
+; Number of registers using Synchronous Clear  ; 0     ;
+; Number of registers using Synchronous Load   ; 0     ;
+; Number of registers using Asynchronous Clear ; 0     ;
+; Number of registers using Asynchronous Load  ; 0     ;
+; Number of registers using Clock Enable       ; 0     ;
+; Number of registers using Preset             ; 0     ;
++----------------------------------------------+-------+
+
+
++-------------------------------------------------------------------------------------------------------------------------------------------+
+; Multiplexer Restructuring Statistics (Restructuring Performed)                                                                            ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+-----------------------------+
+; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output  ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+-----------------------------+
+; 3:1                ; 22 bits   ; 44 LEs        ; 44 LEs               ; 0 LEs                  ; No         ; |processor|displaysIn[3][3] ;
++--------------------+-----------+---------------+----------------------+------------------------+------------+-----------------------------+
+
+
++----------------------------------------------------------------------------------------------------------------+
+; Port Connectivity Checks: "andgate:gate"                                                                       ;
++------+--------+----------+-------------------------------------------------------------------------------------+
+; Port ; Type   ; Severity ; Details                                                                             ;
++------+--------+----------+-------------------------------------------------------------------------------------+
+; out  ; Output ; Info     ; Connected to dangling logic. Logic that only feeds a dangling port will be removed. ;
++------+--------+----------+-------------------------------------------------------------------------------------+
+
+
++-----------------------------------------------------------------------------------------------------------------------------------------+
+; Port Connectivity Checks: "arithmeticlogicunit:branchALU"                                                                               ;
++----------+--------+----------+----------------------------------------------------------------------------------------------------------+
+; Port     ; Type   ; Severity ; Details                                                                                                  ;
++----------+--------+----------+----------------------------------------------------------------------------------------------------------+
+; OP[3..2] ; Input  ; Info     ; Stuck at GND                                                                                             ;
+; OP[1]    ; Input  ; Info     ; Stuck at VCC                                                                                             ;
+; OP[0]    ; Input  ; Info     ; Stuck at GND                                                                                             ;
+; zero     ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed. ;
++----------+--------+----------+----------------------------------------------------------------------------------------------------------+
+
+
++-----------------------------------------------------------------------------------------------------------------------------------------+
+; Port Connectivity Checks: "arithmeticlogicunit:ALUPCPlus4"                                                                              ;
++----------+--------+----------+----------------------------------------------------------------------------------------------------------+
+; Port     ; Type   ; Severity ; Details                                                                                                  ;
++----------+--------+----------+----------------------------------------------------------------------------------------------------------+
+; B[31..3] ; Input  ; Info     ; Stuck at GND                                                                                             ;
+; B[1..0]  ; Input  ; Info     ; Stuck at GND                                                                                             ;
+; B[2]     ; Input  ; Info     ; Stuck at VCC                                                                                             ;
+; OP[3..2] ; Input  ; Info     ; Stuck at GND                                                                                             ;
+; OP[1]    ; Input  ; Info     ; Stuck at VCC                                                                                             ;
+; OP[0]    ; Input  ; Info     ; Stuck at GND                                                                                             ;
+; zero     ; Output ; Warning  ; Declared by entity but not connected by instance. Logic that only feeds a dangling port will be removed. ;
++----------+--------+----------+----------------------------------------------------------------------------------------------------------+
+
+
++----------------------------------------------------+
+; Port Connectivity Checks: "multiplexorPCSrc:PCSrc" ;
++---------+-------+----------+-----------------------+
+; Port    ; Type  ; Severity ; Details               ;
++---------+-------+----------+-----------------------+
+; control ; Input ; Info     ; Stuck at GND          ;
++---------+-------+----------+-----------------------+
+
+
++-----------------------------------------------------+
+; Post-Synthesis Netlist Statistics for Top Partition ;
++-----------------------+-----------------------------+
+; Type                  ; Count                       ;
++-----------------------+-----------------------------+
+; boundary_port         ; 64                          ;
+; cycloneiii_ff         ; 33                          ;
+;     plain             ; 33                          ;
+; cycloneiii_lcell_comb ; 153                         ;
+;     arith             ; 52                          ;
+;         2 data inputs ; 31                          ;
+;         3 data inputs ; 21                          ;
+;     normal            ; 101                         ;
+;         1 data inputs ; 8                           ;
+;         2 data inputs ; 1                           ;
+;         3 data inputs ; 9                           ;
+;         4 data inputs ; 83                          ;
+;                       ;                             ;
+; Max LUT depth         ; 7.30                        ;
+; Average LUT depth     ; 4.28                        ;
++-----------------------+-----------------------------+
+
+
++-------------------------------+
+; Elapsed Time Per Partition    ;
++----------------+--------------+
+; Partition Name ; Elapsed Time ;
++----------------+--------------+
+; Top            ; 00:00:01     ;
++----------------+--------------+
+
+
++-------------------------------+
+; Analysis & Synthesis Messages ;
++-------------------------------+
+Info: *******************************************************************
+Info: Running Quartus Prime Analysis & Synthesis
+    Info: Version 16.1.0 Build 196 10/24/2016 SJ Lite Edition
+    Info: Processing started: Tue Sep 26 21:43:27 2017
+Info: Command: quartus_map --read_settings_files=on --write_settings_files=off Pipelined_MIPS -c Pipelined_MIPS
+Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
+Info (20030): Parallel compilation is enabled and will use 2 of the 2 processors detected
+Info (12021): Found 1 design units, including 1 entities, in source file sll.v
+    Info (12023): Found entity 1: shiftlogicalleft File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/sll.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file signext.v
+    Info (12023): Found entity 1: signext File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/signext.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file registerfile.v
+    Info (12023): Found entity 1: registerfile File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/registerfile.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file programcounter.v
+    Info (12023): Found entity 1: programcounter File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file processor.v
+    Info (12023): Found entity 1: processor File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 5
+Info (12021): Found 4 design units, including 4 entities, in source file pipelinestages.v
+    Info (12023): Found entity 1: PIPE_IF_ID File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 1
+    Info (12023): Found entity 2: PIPE_ID_EX File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 19
+    Info (12023): Found entity 3: PIPE_EX_MEM File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 80
+    Info (12023): Found entity 4: PIPE_MEM_WB File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 128
+Info (12021): Found 6 design units, including 6 entities, in source file multiplexor.v
+    Info (12023): Found entity 1: multiplexorRegDst File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/multiplexor.v Line: 1
+    Info (12023): Found entity 2: multiplexorALUSrc File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/multiplexor.v Line: 16
+    Info (12023): Found entity 3: multiplexorMemtoReg File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/multiplexor.v Line: 32
+    Info (12023): Found entity 4: multiplexorPCSrc File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/multiplexor.v Line: 47
+    Info (12023): Found entity 5: mainALUForwardingMUX File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/multiplexor.v Line: 62
+    Info (12023): Found entity 6: controlMUX File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/multiplexor.v Line: 78
+Info (12021): Found 1 design units, including 1 entities, in source file maincontrolunit.v
+    Info (12023): Found entity 1: maincontrolunit File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/maincontrolunit.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file instructionmemory.v
+    Info (12023): Found entity 1: instructionmemory File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/instructionmemory.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file hazard_detection_unit.v
+    Info (12023): Found entity 1: hazard_detection_unit File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/hazard_detection_unit.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file forwarding_unit.v
+    Info (12023): Found entity 1: forwarding_unit File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file decoder.v
+    Info (12023): Found entity 1: decoder File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/decoder.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file datamemory.v
+    Info (12023): Found entity 1: datamemory File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/datamemory.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file arithmeticlogicunit.v
+    Info (12023): Found entity 1: arithmeticlogicunit File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/arithmeticlogicunit.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file andgate.v
+    Info (12023): Found entity 1: andgate File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/andgate.v Line: 1
+Info (12021): Found 1 design units, including 1 entities, in source file alu_control.v
+    Info (12023): Found entity 1: alu_control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/alu_control.v Line: 1
+Info (12127): Elaborating entity "processor" for the top level hierarchy
+Warning (10235): Verilog HDL Always Construct warning at processor.v(361): variable "PCOutput" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 361
+Warning (10235): Verilog HDL Always Construct warning at processor.v(362): variable "PCOutput" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 362
+Warning (10235): Verilog HDL Always Construct warning at processor.v(363): variable "PCOutput" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 363
+Warning (10235): Verilog HDL Always Construct warning at processor.v(364): variable "PCOutput" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 364
+Warning (10235): Verilog HDL Always Construct warning at processor.v(365): variable "PCOutput" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 365
+Warning (10235): Verilog HDL Always Construct warning at processor.v(366): variable "PCOutput" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 366
+Warning (10235): Verilog HDL Always Construct warning at processor.v(369): variable "ALUPCPlus4Output" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 369
+Warning (10235): Verilog HDL Always Construct warning at processor.v(370): variable "ALUPCPlus4Output" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 370
+Warning (10235): Verilog HDL Always Construct warning at processor.v(371): variable "ALUPCPlus4Output" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 371
+Warning (10235): Verilog HDL Always Construct warning at processor.v(372): variable "ALUPCPlus4Output" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 372
+Warning (10235): Verilog HDL Always Construct warning at processor.v(373): variable "ALUPCPlus4Output" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 373
+Warning (10235): Verilog HDL Always Construct warning at processor.v(374): variable "ALUPCPlus4Output" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 374
+Warning (10235): Verilog HDL Always Construct warning at processor.v(377): variable "clk" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 377
+Info (12128): Elaborating entity "multiplexorPCSrc" for hierarchy "multiplexorPCSrc:PCSrc" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 111
+Info (12128): Elaborating entity "programcounter" for hierarchy "programcounter:PC" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 113
+Warning (10235): Verilog HDL Always Construct warning at programcounter.v(10): variable "PCWrite" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 10
+Warning (10235): Verilog HDL Always Construct warning at programcounter.v(11): variable "reset" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 11
+Warning (10235): Verilog HDL Always Construct warning at programcounter.v(12): variable "in" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 12
+Warning (10240): Verilog HDL Always Construct warning at programcounter.v(9): inferring latch(es) for variable "out", which holds its previous value in one or more paths through the always construct File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[0]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[1]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[2]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[3]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[4]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[5]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[6]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[7]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[8]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[9]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[10]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[11]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[12]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[13]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[14]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[15]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[16]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[17]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[18]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[19]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[20]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[21]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[22]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[23]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[24]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[25]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[26]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[27]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[28]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[29]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[30]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (10041): Inferred latch for "out[31]" at programcounter.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Info (12128): Elaborating entity "instructionmemory" for hierarchy "instructionmemory:InstructionMemory" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 115
+Warning (10030): Net "memory.data_a" at instructionmemory.v(6) has no driver or initial value, using a default initial value '0' File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/instructionmemory.v Line: 6
+Warning (10030): Net "memory.waddr_a" at instructionmemory.v(6) has no driver or initial value, using a default initial value '0' File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/instructionmemory.v Line: 6
+Warning (10030): Net "memory.we_a" at instructionmemory.v(6) has no driver or initial value, using a default initial value '0' File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/instructionmemory.v Line: 6
+Info (12128): Elaborating entity "arithmeticlogicunit" for hierarchy "arithmeticlogicunit:ALUPCPlus4" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 117
+Warning (10858): Verilog HDL warning at arithmeticlogicunit.v(8): object dontcare used but never assigned File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/arithmeticlogicunit.v Line: 8
+Warning (10235): Verilog HDL Always Construct warning at arithmeticlogicunit.v(19): variable "dontcare" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/arithmeticlogicunit.v Line: 19
+Warning (10030): Net "dontcare" at arithmeticlogicunit.v(8) has no driver or initial value, using a default initial value '0' File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/arithmeticlogicunit.v Line: 8
+Info (12128): Elaborating entity "PIPE_IF_ID" for hierarchy "PIPE_IF_ID:IF_ID" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 119
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(8): variable "IF_ID_Write" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 8
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(9): variable "PIPEIN_PCPlus4" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 9
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(10): variable "PIPEIN_InsMemory" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 10
+Warning (10240): Verilog HDL Always Construct warning at pipelinestages.v(7): inferring latch(es) for variable "PIPEOUT_PCPlus4", which holds its previous value in one or more paths through the always construct File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Warning (10240): Verilog HDL Always Construct warning at pipelinestages.v(7): inferring latch(es) for variable "PIPEOUT_InsMemory", which holds its previous value in one or more paths through the always construct File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[0]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[1]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[2]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[3]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[4]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[5]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[6]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[7]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[8]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[9]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[10]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[11]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[12]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[13]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[14]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[15]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[16]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[17]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[18]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[19]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[20]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[21]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[22]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[23]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[24]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[25]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[26]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[27]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[28]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[29]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[30]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_InsMemory[31]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[0]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[1]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[2]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[3]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[4]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[5]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[6]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[7]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[8]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[9]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[10]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[11]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[12]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[13]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[14]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[15]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[16]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[17]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[18]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[19]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[20]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[21]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[22]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[23]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[24]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[25]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[26]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[27]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[28]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[29]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[30]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (10041): Inferred latch for "PIPEOUT_PCPlus4[31]" at pipelinestages.v(7) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 7
+Info (12128): Elaborating entity "hazard_detection_unit" for hierarchy "hazard_detection_unit:hazardUnit" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 131
+Info (12128): Elaborating entity "maincontrolunit" for hierarchy "maincontrolunit:ControlUnit" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 133
+Warning (10858): Verilog HDL warning at maincontrolunit.v(14): object dontcare used but never assigned File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/maincontrolunit.v Line: 14
+Warning (10235): Verilog HDL Always Construct warning at maincontrolunit.v(63): variable "dontcare" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/maincontrolunit.v Line: 63
+Warning (10235): Verilog HDL Always Construct warning at maincontrolunit.v(64): variable "dontcare" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/maincontrolunit.v Line: 64
+Warning (10235): Verilog HDL Always Construct warning at maincontrolunit.v(65): variable "dontcare" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/maincontrolunit.v Line: 65
+Warning (10235): Verilog HDL Always Construct warning at maincontrolunit.v(66): variable "dontcare" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/maincontrolunit.v Line: 66
+Warning (10235): Verilog HDL Always Construct warning at maincontrolunit.v(67): variable "dontcare" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/maincontrolunit.v Line: 67
+Warning (10235): Verilog HDL Always Construct warning at maincontrolunit.v(68): variable "dontcare" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/maincontrolunit.v Line: 68
+Warning (10235): Verilog HDL Always Construct warning at maincontrolunit.v(69): variable "dontcare" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/maincontrolunit.v Line: 69
+Warning (10235): Verilog HDL Always Construct warning at maincontrolunit.v(70): variable "dontcare" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/maincontrolunit.v Line: 70
+Warning (10235): Verilog HDL Always Construct warning at maincontrolunit.v(71): variable "dontcare" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/maincontrolunit.v Line: 71
+Warning (10030): Net "dontcare" at maincontrolunit.v(14) has no driver or initial value, using a default initial value '0' File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/maincontrolunit.v Line: 14
+Info (12128): Elaborating entity "controlMUX" for hierarchy "controlMUX:hazardMUX" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 155
+Info (12128): Elaborating entity "registerfile" for hierarchy "registerfile:RegisterFile" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 157
+Warning (10235): Verilog HDL Always Construct warning at registerfile.v(36): variable "regWrite" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/registerfile.v Line: 36
+Warning (10235): Verilog HDL Always Construct warning at registerfile.v(37): variable "writeData" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/registerfile.v Line: 37
+Warning (10235): Verilog HDL Always Construct warning at registerfile.v(37): variable "writeRegister" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/registerfile.v Line: 37
+Warning (10240): Verilog HDL Always Construct warning at registerfile.v(35): inferring latch(es) for variable "update", which holds its previous value in one or more paths through the always construct File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/registerfile.v Line: 35
+Info (12128): Elaborating entity "signext" for hierarchy "signext:SignExt" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 159
+Warning (10858): Verilog HDL warning at signext.v(6): object dontcare used but never assigned File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/signext.v Line: 6
+Warning (10235): Verilog HDL Always Construct warning at signext.v(19): variable "dontcare" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/signext.v Line: 19
+Info (12128): Elaborating entity "PIPE_ID_EX" for hierarchy "PIPE_ID_EX:ID_EX" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 202
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(55): variable "PIPEIN_EX_ALUSrc" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 55
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(56): variable "PIPEIN_EX_ALUOp" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 56
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(57): variable "PIPEIN_EX_RegDst" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 57
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(59): variable "PIPEIN_MEM_Branch" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 59
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(60): variable "PIPEIN_MEM_MRead" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 60
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(61): variable "PIPEIN_MEM_MWrite" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 61
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(63): variable "PIPEIN_WB_RegWrite" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 63
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(64): variable "PIPEIN_WB_MemtoReg" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 64
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(67): variable "PIPEIN_PCPlus4" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 67
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(68): variable "PIPEIN_ReadData1" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 68
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(69): variable "PIPEIN_ReadData2" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 69
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(70): variable "PIPEIN_SignExt" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 70
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(71): variable "PIPEIN_RS" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 71
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(72): variable "PIPEIN_RT" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 72
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(73): variable "PIPEIN_RD" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 73
+Info (12128): Elaborating entity "shiftlogicalleft" for hierarchy "shiftlogicalleft:SLL" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 205
+Info (12128): Elaborating entity "mainALUForwardingMUX" for hierarchy "mainALUForwardingMUX:ALUi0" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 209
+Info (12128): Elaborating entity "multiplexorALUSrc" for hierarchy "multiplexorALUSrc:ALUSrcMux" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 213
+Info (12128): Elaborating entity "alu_control" for hierarchy "alu_control:ALUControl" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 217
+Warning (10858): Verilog HDL warning at alu_control.v(7): object dontcare used but never assigned File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/alu_control.v Line: 7
+Warning (10270): Verilog HDL Case Statement warning at alu_control.v(13): incomplete case statement has no default case item File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/alu_control.v Line: 13
+Warning (10235): Verilog HDL Always Construct warning at alu_control.v(21): variable "dontcare" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/alu_control.v Line: 21
+Warning (10240): Verilog HDL Always Construct warning at alu_control.v(9): inferring latch(es) for variable "aluCtrlOut", which holds its previous value in one or more paths through the always construct File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/alu_control.v Line: 9
+Warning (10030): Net "dontcare" at alu_control.v(7) has no driver or initial value, using a default initial value '0' File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/alu_control.v Line: 7
+Info (10041): Inferred latch for "aluCtrlOut[0]" at alu_control.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/alu_control.v Line: 9
+Info (10041): Inferred latch for "aluCtrlOut[1]" at alu_control.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/alu_control.v Line: 9
+Info (10041): Inferred latch for "aluCtrlOut[2]" at alu_control.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/alu_control.v Line: 9
+Info (10041): Inferred latch for "aluCtrlOut[3]" at alu_control.v(9) File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/alu_control.v Line: 9
+Info (12128): Elaborating entity "multiplexorRegDst" for hierarchy "multiplexorRegDst:regDstMUX" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 219
+Info (12128): Elaborating entity "PIPE_EX_MEM" for hierarchy "PIPE_EX_MEM:EX_MEM" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 249
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(112): variable "PIPEIN_MEM_Branch" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 112
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(113): variable "PIPEIN_MEM_MRead" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 113
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(114): variable "PIPEIN_MEM_MWrite" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 114
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(116): variable "PIPEIN_WB_RegWrite" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 116
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(117): variable "PIPEIN_WB_MemtoReg" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 117
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(120): variable "PIPEIN_BranchALUOutput" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 120
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(121): variable "PIPEIN_Zero" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 121
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(122): variable "PIPEIN_ALUResult" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 122
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(123): variable "PIPEIN_ReadData2" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 123
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(124): variable "PIPEIN_RegDstOutput" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 124
+Info (12128): Elaborating entity "forwarding_unit" for hierarchy "forwarding_unit:ForwardingUnit" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 261
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(22): variable "EX_MEM_RegWrite" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 22
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(22): variable "EX_MEM_Rd" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 22
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(23): variable "EX_MEM_Rd" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 23
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(23): variable "ID_EX_Rs" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 23
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(24): variable "EX_MEM_Rd" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 24
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(24): variable "ID_EX_Rt" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 24
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(27): variable "MEM_WB_RegWrite" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 27
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(27): variable "MEM_WB_Rd" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 27
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(28): variable "EX_MEM_RegWrite" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 28
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(28): variable "EX_MEM_Rd" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 28
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(28): variable "ID_EX_Rs" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 28
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(29): variable "MEM_WB_Rd" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 29
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(29): variable "ID_EX_Rs" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 29
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(32): variable "EX_MEM_RegWrite" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 32
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(32): variable "EX_MEM_Rd" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 32
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(32): variable "ID_EX_Rt" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 32
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(33): variable "MEM_WB_Rd" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 33
+Warning (10235): Verilog HDL Always Construct warning at forwarding_unit.v(33): variable "ID_EX_Rt" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/forwarding_unit.v Line: 33
+Info (12128): Elaborating entity "andgate" for hierarchy "andgate:gate" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 264
+Info (12128): Elaborating entity "datamemory" for hierarchy "datamemory:datamem" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 266
+Warning (10858): Verilog HDL warning at datamemory.v(11): object dontcare used but never assigned File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/datamemory.v Line: 11
+Warning (10235): Verilog HDL Always Construct warning at datamemory.v(15): variable "dontcare" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/datamemory.v Line: 15
+Warning (10235): Verilog HDL Always Construct warning at datamemory.v(19): variable "memWrite" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/datamemory.v Line: 19
+Warning (10235): Verilog HDL Always Construct warning at datamemory.v(19): variable "writeData" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/datamemory.v Line: 19
+Warning (10235): Verilog HDL Always Construct warning at datamemory.v(19): variable "addr" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/datamemory.v Line: 19
+Warning (10030): Net "dontcare" at datamemory.v(11) has no driver or initial value, using a default initial value '0' File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/datamemory.v Line: 11
+Info (12128): Elaborating entity "PIPE_MEM_WB" for hierarchy "PIPE_MEM_WB:MEM_WB" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 286
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(150): variable "PIPEIN_WB_RegWrite" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 150
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(151): variable "PIPEIN_WB_MemtoReg" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 151
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(153): variable "PIPEIN_DataMemoryOutput" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 153
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(154): variable "PIPEIN_MainALUOutput" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 154
+Warning (10235): Verilog HDL Always Construct warning at pipelinestages.v(155): variable "PIPEIN_RegDstOutput" is read inside the Always Construct but isn't in the Always Construct's Event Control File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/pipelinestages.v Line: 155
+Info (12128): Elaborating entity "multiplexorMemtoReg" for hierarchy "multiplexorMemtoReg:MemtoReg" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 289
+Info (12128): Elaborating entity "decoder" for hierarchy "decoder:display0" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 314
+Warning (127007): Memory Initialization File or Hexadecimal (Intel-Format) File "D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/db/Pipelined_MIPS.ram0_instructionmemory_56655cf4.hdl.mif" contains "don't care" values -- overwriting them with 0s
+Info (276014): Found 1 instances of uninferred RAM logic
+    Info (276013): RAM logic "instructionmemory:InstructionMemory|memory" is uninferred because MIF is not supported for the selected family File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/instructionmemory.v Line: 6
+Warning (127007): Memory Initialization File or Hexadecimal (Intel-Format) File "D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/db/Pipelined_MIPS.ram0_instructionmemory_56655cf4.hdl.mif" contains "don't care" values -- overwriting them with 0s
+Warning (14026): LATCH primitive "programcounter:PC|out[31]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[30]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[29]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[28]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[27]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[26]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[25]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[24]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[23]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[22]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[21]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[20]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[19]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[18]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[17]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[16]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[15]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[14]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[13]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[12]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[11]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[10]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[9]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[8]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[7]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[6]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[5]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[4]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[3]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[2]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[1]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (14026): LATCH primitive "programcounter:PC|out[0]" is permanently enabled File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/programcounter.v Line: 9
+Warning (12241): 2 hierarchies have connectivity warnings - see the Connectivity Checks report folder
+Info (286030): Timing-Driven Synthesis is running
+Info (144001): Generated suppressed messages file D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/output_files/Pipelined_MIPS.map.smsg
+Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
+    Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
+Warning (21074): Design contains 1 input pin(s) that do not drive logic
+    Warning (15610): No output dependent on input pin "pushbutton0" File: D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/processor.v Line: 7
+Info (21057): Implemented 230 device resources after synthesis - the final resource count might be different
+    Info (21058): Implemented 12 input pins
+    Info (21059): Implemented 52 output pins
+    Info (21061): Implemented 166 logic cells
+Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 142 warnings
+    Info: Peak virtual memory: 661 megabytes
+    Info: Processing ended: Tue Sep 26 21:43:49 2017
+    Info: Elapsed time: 00:00:22
+    Info: Total CPU time (on all processors): 00:00:45
+
+
++------------------------------------------+
+; Analysis & Synthesis Suppressed Messages ;
++------------------------------------------+
+The suppressed messages can be found in D:/Cloud_Storage/Google Drive/Faculdade/Semestre 4/OC II/TPs/OC2_MIPS_Processador_Pipeline/output_files/Pipelined_MIPS.map.smsg.
+
+
